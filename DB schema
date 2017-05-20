@@ -1,0 +1,12 @@
+//DB name: dongdongju
+
+CREATE TABLE Info (
+ID VARCHAR(30) NOT NULL PRIMARY KEY,
+PW VARCHAR(30) NOT NULL, 
+Email VARCHAR(30),
+Token INT,
+Enable TINYINT default 0,
+Sex CHAR(1));
+
+
+//key is ID ,,, Enable is TINYINT with 1 for enable 0 for disable(default is 0) ,, Sex is 'm','f'
