@@ -51,7 +51,7 @@ void MainWindow::on_pbLogin_clicked() {
                                  QMessageBox::Ok);
         return;
     }
-   // if(qry.exec("SELECT ID FROM Info WHERE ID=userName"))
+   // if(qry.exec("SELECT ID FROM Info WHERE ID=\'"+userName ))
 
 
     //socket->connectToHost(serverName, PORT);//
