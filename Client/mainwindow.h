@@ -27,6 +27,8 @@ private slots:
     void onReadyRead();
     void onConnected();
     void onDisconnected();
+    void on_pushButton_clicked();
+
     void on_pbSignin_clicked();
 
 private:
