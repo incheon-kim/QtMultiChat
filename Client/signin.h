@@ -1,22 +1,22 @@
 #ifndef SIGNIN_H
 #define SIGNIN_H
 
-#include <QDialog>
+#include <QWidget>
 
 namespace Ui {
-class Signin;
+class signin;
 }
 
-class Signin : public QDialog
+class signin : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit Signin(QWidget *parent = 0);
-    ~Signin();
+    explicit signin(QWidget *parent = 0);
+    ~signin();
 
 private:
-    Ui::Signin *ui;
+    Ui::signin *ui;
 };
 
 #endif // SIGNIN_H

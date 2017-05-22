@@ -16,15 +16,15 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     mainwindow.cpp \
-    signin.cpp
+    dlsignin.cpp
 
 HEADERS  += \
     mainwindow.h \
-    signin.h
+    dlsignin.h
 
 FORMS    += \
     mainwindow.ui \
-    signin.ui
+    dlsignin.ui
 
 RESOURCES += \
     icons.qrc

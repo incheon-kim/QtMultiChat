@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Signin</class>
- <widget name="Signin" class="QDialog">
+ <class>signin</class>
+ <widget class="QWidget" name="signin">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -10,8 +11,21 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Dialog</string>
+   <string>Form</string>
   </property>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>140</x>
+     <y>230</y>
+     <width>89</width>
+     <height>25</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Sign in!</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

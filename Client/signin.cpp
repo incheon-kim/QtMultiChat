@@ -1,14 +1,14 @@
 #include "signin.h"
-#include "signin.h"
+#include "ui_signin.h"
 
-Signin::Signin(QWidget *parent) :
-    QDialog(parent),
-    ui(new Ui::Signin)
+signin::signin(QWidget *parent) :
+    QWidget(parent),
+    ui(new Ui::signin)
 {
     ui->setupUi(this);
 }
 
-Signin::~Signin()
+signin::~signin()
 {
     delete ui;
 }

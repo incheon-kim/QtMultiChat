@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
+#include "dlsignin.h"
 #include <QRegExp>
 #include <QMessageBox>
 #include <QListWidgetItem>
@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->leID, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
     connect(ui->lePW, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
     connect(ui->leMessage, SIGNAL(returnPressed()), this, SLOT(on_pbSend_clicked()));
-
+    connect(ui->pbSignin,SIGNAL(returnPressed()),this,SLOT(on_pbSignin_clicked()));
 
     QRegExp regex("^[a-zA-Z]\\w+");
     ui->leID->setValidator(new QRegExpValidator(regex, this));
@@ -110,7 +110,9 @@ void MainWindow::onDisconnected() {
 //signin should be made
 void MainWindow::on_pbSignin_clicked()
 {
-
+    dlsignin form;
+    form.setModal(true);
+    form.exec();
 }
 
 
