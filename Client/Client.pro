@@ -21,7 +21,8 @@ HEADERS  += \
     mainwindow.h
 
 FORMS    += \
-    mainwindow.ui
+    mainwindow.ui \
+    dlsignin.ui
 
 RESOURCES += \
     icons.qrc
