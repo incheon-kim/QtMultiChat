@@ -1,7 +1,9 @@
 #include "dlsignin.h"
 #include "ui_dlsignin.h"
-
 #include <QMessageBox>
+#include <QCryptographicHash>
+#include "simplecrypt.h"
+#include <QTcpSocket>
 dlsignin::dlsignin(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dlsignin)
@@ -29,7 +31,12 @@ void dlsignin::on_pbSigninform_clicked()
                                  "Enter your PW.",
                                  QMessageBox::Ok);
         return;}
-
+    //encryption
+    SimpleCrypt crypto;
+    crypto.setKey(0x0c2ad4a4acb9f023);
+    QString enpw=crypto.encryptToString(makepw);
+    QString dcpw=crypto.decryptToString(enpw);
+    QMessageBox::information(NULL, "Warning",enpw,QMessageBox::Ok);
     QString makeEmail=ui->leEmail->text().trimmed();
     if(makeEmail.isEmpty()){
         QMessageBox::information(NULL, "Warning",

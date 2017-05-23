@@ -4,7 +4,8 @@
 #include <QRegExp>
 #include <QMessageBox>
 #include <QListWidgetItem>
-
+#include <QTcpSocket>
+#include "simplecrypt.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -50,8 +51,12 @@ void MainWindow::on_pbLogin_clicked() {
                                  QMessageBox::Ok);
         return;
     }
+    SimpleCrypt crypto;
+    crypto.setKey(0x0c2ad4a4acb9f023);
+    QString cpw=crypto.encryptToString(userPW);
 
-
+socket->write(QString("/userID:"+userName+"/userPW"+cpw).toUtf8());
+socket->waitForBytesWritten(10);
 
 }
 
