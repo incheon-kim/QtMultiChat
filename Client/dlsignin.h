@@ -2,7 +2,7 @@
 #define DLSIGNIN_H
 
 #include <QDialog>
-
+#include <QTcpSocket>
 namespace Ui {
 class dlsignin;
 }
@@ -20,6 +20,7 @@ private slots:
 
 private:
     Ui::dlsignin *ui;
+     QTcpSocket* socket;
 };
 
 #endif // DLSIGNIN_H

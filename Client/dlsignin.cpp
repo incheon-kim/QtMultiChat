@@ -3,7 +3,7 @@
 #include <QMessageBox>
 #include <QCryptographicHash>
 #include "simplecrypt.h"
-#include <QTcpSocket>
+
 dlsignin::dlsignin(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dlsignin)
@@ -13,6 +13,7 @@ dlsignin::dlsignin(QWidget *parent) :
 
 dlsignin::~dlsignin()
 {
+    socket->close();
     delete ui;
 }
 
@@ -51,4 +52,6 @@ void dlsignin::on_pbSigninform_clicked()
 
     else if(ui->Male->isChecked())
             ugender=0;
+
+    socket->write(QString("/makeID:"+ makeid +"/makepw:"+enpw+"/makeemail"+makeEmail+"/makegender"+ugender).toUtf8());
 }
