@@ -278,9 +278,9 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="pbSignin">
+                 <widget class="QPushButton" name="pbSignup">
                   <property name="text">
-                   <string>Sign in</string>
+                   <string>Sign up</string>
                   </property>
                  </widget>
                 </item>

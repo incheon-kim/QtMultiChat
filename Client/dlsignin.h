@@ -16,7 +16,7 @@ public:
     ~dlsignin();
 
 private slots:
-    void on_pbSigninform_clicked();
+    void on_pbSignupform_clicked();
 
 private:
     Ui::dlsignin *ui;

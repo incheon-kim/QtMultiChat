@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->leID, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
     connect(ui->lePW, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
     connect(ui->leMessage, SIGNAL(returnPressed()), this, SLOT(on_pbSend_clicked()));
-    connect(ui->pbSignin,SIGNAL(returnPressed()),this,SLOT(on_pbSignin_clicked()));
+    connect(ui->pbSignup,SIGNAL(returnPressed()),this,SLOT(on_pbSignup_clicked()));
 
     QRegExp regex("^[a-zA-Z]\\w+");
     ui->leID->setValidator(new QRegExpValidator(regex, this));
@@ -80,7 +80,7 @@ void MainWindow::onReadyRead() {
             QStringList users = usersRex.cap(1).split(",");
             ui->lwUsers->clear();
             foreach (QString user, users) {
-                 new QListWidgetItem(QIcon(":/user1.png"), user, ui->lwUsers);
+                 new QListWidgetItem(QIcon(":/user.png"), user, ui->lwUsers);
             }
 
             }
@@ -112,12 +112,14 @@ void MainWindow::onDisconnected() {
                          "You have been disconnected from the server", QMessageBox::Ok);
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }
-//signin should be made
-void MainWindow::on_pbSignin_clicked()
+
+
+
+
+void MainWindow::on_pbSignup_clicked()
 {
+
     dlsignin form;
     form.setModal(true);
     form.exec();
 }
-
-
