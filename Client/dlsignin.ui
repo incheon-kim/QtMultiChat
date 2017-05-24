@@ -19,6 +19,9 @@
   <property name="windowTitle">
    <string>SIGN UP</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(184, 214, 255);</string>
+  </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
@@ -41,7 +44,24 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="leIDsf"/>
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="leIDsf">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -55,7 +75,24 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="lePWsf"/>
+         <spacer name="horizontalSpacer_2">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="lePWsf">
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -69,7 +106,27 @@
          </widget>
         </item>
         <item>
-         <widget class="QLineEdit" name="leEmail"/>
+         <spacer name="horizontalSpacer_3">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLineEdit" name="leEmail">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">background-color: rgb(255, 255, 255);</string>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -109,6 +166,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="pbSignupform">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="text">
        <string>Sign up!</string>
       </property>

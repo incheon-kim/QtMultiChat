@@ -79,6 +79,9 @@ QLineEdit {
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QFrame" name="mainFrame">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -88,6 +91,9 @@ QLineEdit {
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QLabel" name="upperLabel">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="text">
           <string>Dongdongju</string>
          </property>
@@ -98,6 +104,10 @@ QLineEdit {
        </item>
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
+         <property name="styleSheet">
+          <string notr="true">
+background-color: rgb(184, 214, 255);</string>
+         </property>
          <property name="currentIndex">
           <number>1</number>
          </property>
@@ -203,6 +213,12 @@ p, li { white-space: pre-wrap; }
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="styleSheet">
+              <string notr="true">border-color: rgb(255, 255, 255);
+
+alternate-background-color: rgb(255, 255, 255);
+selection-color: rgb(255, 255, 255);</string>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -272,6 +288,9 @@ p, li { white-space: pre-wrap; }
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
                  <widget class="QPushButton" name="pbLogin">
+                  <property name="styleSheet">
+                   <string notr="true"/>
+                  </property>
                   <property name="text">
                    <string>Login</string>
                   </property>
@@ -295,6 +314,9 @@ p, li { white-space: pre-wrap; }
        </item>
        <item>
         <widget class="QLabel" name="lowerLabel">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="text">
           <string>by. dongdongju in Dongguk University</string>
          </property>
