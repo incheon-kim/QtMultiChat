@@ -109,7 +109,7 @@ QLineEdit {
 background-color: rgb(184, 214, 255);</string>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>1</number>
          </property>
          <widget class="QWidget" name="chatPage">
           <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -244,6 +244,9 @@ selection-color: rgb(255, 255, 255);</string>
                  <layout class="QVBoxLayout" name="verticalLayout_5">
                   <item>
                    <widget class="QLabel" name="IDlabel">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(184, 214, 255);</string>
+                    </property>
                     <property name="text">
                      <string>ID  </string>
                     </property>
@@ -251,6 +254,9 @@ selection-color: rgb(255, 255, 255);</string>
                   </item>
                   <item>
                    <widget class="QLabel" name="PWlable">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(184, 214, 255);</string>
+                    </property>
                     <property name="text">
                      <string>PW  </string>
                     </property>
@@ -268,6 +274,9 @@ selection-color: rgb(255, 255, 255);</string>
                       <height>0</height>
                      </size>
                     </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    </property>
                     <property name="text">
                      <string/>
                     </property>
@@ -281,6 +290,9 @@ selection-color: rgb(255, 255, 255);</string>
                   </item>
                   <item>
                    <widget class="QLineEdit" name="lePW">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    </property>
                     <property name="maxLength">
                      <number>12</number>
                     </property>
@@ -301,7 +313,7 @@ selection-color: rgb(255, 255, 255);</string>
                 <item>
                  <widget class="QPushButton" name="pbLogin">
                   <property name="styleSheet">
-                   <string notr="true"/>
+                   <string notr="true">background-color: rgb(184, 214, 255);</string>
                   </property>
                   <property name="text">
                    <string>Login</string>
@@ -310,6 +322,9 @@ selection-color: rgb(255, 255, 255);</string>
                 </item>
                 <item>
                  <widget class="QPushButton" name="pbSignup">
+                  <property name="styleSheet">
+                   <string notr="true">background-color: rgb(184, 214, 255);</string>
+                  </property>
                   <property name="text">
                    <string>Sign up</string>
                   </property>
