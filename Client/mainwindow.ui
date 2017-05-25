@@ -79,6 +79,9 @@ QLineEdit {
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QFrame" name="mainFrame">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -88,6 +91,9 @@ QLineEdit {
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
         <widget class="QLabel" name="upperLabel">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="text">
           <string>Dongdongju</string>
          </property>
@@ -98,6 +104,10 @@ QLineEdit {
        </item>
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
+         <property name="styleSheet">
+          <string notr="true">
+background-color: rgb(184, 214, 255);</string>
+         </property>
          <property name="currentIndex">
           <number>1</number>
          </property>
@@ -113,6 +123,9 @@ QLineEdit {
                  <height>0</height>
                 </size>
                </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
                <property name="readOnly">
                 <bool>true</bool>
                </property>
@@ -121,7 +134,7 @@ QLineEdit {
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Helvetica,Arial,sans-serif'; font-size:12px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:12px;&quot;&gt;chat&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
              </item>
@@ -144,6 +157,9 @@ p, li { white-space: pre-wrap; }
                  <width>150</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
                </property>
                <property name="selectionMode">
                 <enum>QAbstractItemView::NoSelection</enum>
@@ -174,6 +190,9 @@ p, li { white-space: pre-wrap; }
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
               <widget class="QLineEdit" name="leMessage">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
                </property>
@@ -181,6 +200,9 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <widget class="QPushButton" name="pbSend">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
                <property name="text">
                 <string>Send</string>
                </property>
@@ -203,6 +225,12 @@ p, li { white-space: pre-wrap; }
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="styleSheet">
+              <string notr="true">border-color: rgb(255, 255, 255);
+
+alternate-background-color: rgb(255, 255, 255);
+selection-color: rgb(255, 255, 255);</string>
+             </property>
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -216,6 +244,9 @@ p, li { white-space: pre-wrap; }
                  <layout class="QVBoxLayout" name="verticalLayout_5">
                   <item>
                    <widget class="QLabel" name="IDlabel">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(184, 214, 255);</string>
+                    </property>
                     <property name="text">
                      <string>ID  </string>
                     </property>
@@ -223,6 +254,9 @@ p, li { white-space: pre-wrap; }
                   </item>
                   <item>
                    <widget class="QLabel" name="PWlable">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(184, 214, 255);</string>
+                    </property>
                     <property name="text">
                      <string>PW  </string>
                     </property>
@@ -240,6 +274,9 @@ p, li { white-space: pre-wrap; }
                       <height>0</height>
                      </size>
                     </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    </property>
                     <property name="text">
                      <string/>
                     </property>
@@ -253,6 +290,9 @@ p, li { white-space: pre-wrap; }
                   </item>
                   <item>
                    <widget class="QLineEdit" name="lePW">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    </property>
                     <property name="maxLength">
                      <number>12</number>
                     </property>
@@ -272,6 +312,9 @@ p, li { white-space: pre-wrap; }
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
                  <widget class="QPushButton" name="pbLogin">
+                  <property name="styleSheet">
+                   <string notr="true">background-color: rgb(184, 214, 255);</string>
+                  </property>
                   <property name="text">
                    <string>Login</string>
                   </property>
@@ -279,6 +322,9 @@ p, li { white-space: pre-wrap; }
                 </item>
                 <item>
                  <widget class="QPushButton" name="pbSignup">
+                  <property name="styleSheet">
+                   <string notr="true">background-color: rgb(184, 214, 255);</string>
+                  </property>
                   <property name="text">
                    <string>Sign up</string>
                   </property>
@@ -295,6 +341,9 @@ p, li { white-space: pre-wrap; }
        </item>
        <item>
         <widget class="QLabel" name="lowerLabel">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="text">
           <string>by. dongdongju in Dongguk University</string>
          </property>

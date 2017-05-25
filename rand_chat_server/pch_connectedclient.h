@@ -1,7 +1,7 @@
 #ifndef PCH_CONNECTEDCLIENT_H
 #define PCH_CONNECTEDCLIENT_H
 
-#endif // PCH_CONNECTEDCLIENT_H
+
 
 
 #include<netinet/in.h>

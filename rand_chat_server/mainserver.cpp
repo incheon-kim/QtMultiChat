@@ -79,7 +79,7 @@ bool MainServer::Run()
 
 		// connectedClients에 연결된 클라이언트 정보 넣어주고 실행
 		char b[256];
-		inet_ntop(AF_INET6, &clientAddr.sin6_addr, b, sizeof(b));
+
 		cout << "Client connected (IP : " << b<<")" << endl;
 
 		shared_ptr<ConnectedClient> client(new ConnectedClient());

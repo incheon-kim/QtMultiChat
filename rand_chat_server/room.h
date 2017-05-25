@@ -1,8 +1,5 @@
 #ifndef ROOM_H
 #define ROOM_H
-
-#endif // ROOM_H
-
 #pragma once
 #include "protocol.h"
 
@@ -29,3 +26,4 @@ private:
 	ConnectedClient* c1;
 	ConnectedClient* c2;
 };
+

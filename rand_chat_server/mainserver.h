@@ -1,7 +1,6 @@
 #ifndef MAINSERVER_H
 #define MAINSERVER_H
 
-#endif // MAINSERVER_H
 
 
 #include <list>
@@ -17,11 +16,6 @@
 
 using namespace std; 
 
-class Mainserver
-{
-public:
-    Mainserver();
-    ~Mainserver();
     
     void Init(unsigned int port);
     bool Run();
@@ -58,3 +52,4 @@ public:
     
     queue<ConnectedClient*> searchingQueue;
 };
+

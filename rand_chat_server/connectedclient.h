@@ -1,7 +1,7 @@
 #ifndef CONNECTEDCLIENT_H
 #define CONNECTEDCLIENT_H
 
-#endif // CONNECTEDCLIENT_H
+
 
 #include"pch_connectedclient.h"
 #include"room.h"
