@@ -10897,5 +10897,4 @@ inline nlohmann::json::json_pointer operator "" _json_pointer(const char* s, std
     #pragma GCC diagnostic pop
 #endif
 
-#endif
-#endif // JSON_HPP
+

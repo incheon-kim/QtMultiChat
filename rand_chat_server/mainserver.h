@@ -10,18 +10,12 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <arpa/inet.h>
 
 #include "connectedclient.h"
 #include "room.h"
 
 using namespace std; 
 
-class MainServer
-{
-public:
-    MainServer();
-    ~MainServer();
     
     void Init(unsigned int port);
     bool Run();
@@ -59,4 +53,3 @@ public:
     queue<ConnectedClient*> searchingQueue;
 };
 
-#endif // MAINSERVER_H

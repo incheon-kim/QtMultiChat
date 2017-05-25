@@ -1,8 +1,5 @@
 #ifndef ROOM_H
 #define ROOM_H
-
-
-
 #pragma once
 #include "protocol.h"
 
@@ -30,4 +27,3 @@ private:
 	ConnectedClient* c2;
 };
 
-#endif // ROOM_H

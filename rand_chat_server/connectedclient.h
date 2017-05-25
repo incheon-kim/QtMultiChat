@@ -68,5 +68,3 @@ private:
 
     State state;
 };
-
-#endif // CONNECTEDCLIENT_H

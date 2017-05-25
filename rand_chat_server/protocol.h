@@ -2,7 +2,6 @@
 #define PROTOCOL_H
 
 
-
 #include<string>
 #include<bitset>
 #include<iostream>
@@ -105,5 +104,3 @@ struct Protocol_UserLeaved
 
 	static Protocol_UserLeaved ToProtocol(const std::string& data);
 };
-
-#endif // PROTOCOL_H
