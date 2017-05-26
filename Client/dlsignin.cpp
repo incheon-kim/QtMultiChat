@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QCryptographicHash>
 #include "simplecrypt.h"
+#include <QString>
 
 dlsignin::dlsignin(QWidget *parent) :
     QDialog(parent),
@@ -26,6 +27,12 @@ void dlsignin::on_pbSignupform_clicked()
                                  "Enter your ID.",
                                  QMessageBox::Ok);
         return;}
+    if(makeid.count()>30){ //id sould be under 30 char
+        QMessageBox::information(NULL, "Warning",
+                                                 "ID should be under 30 characters.",
+                                                   QMessageBox::Ok);
+                          return;}
+
 
     QString makepw=ui->lePWsf->text().trimmed();
     if (makepw.isEmpty()) {
@@ -33,6 +40,18 @@ void dlsignin::on_pbSignupform_clicked()
                                  "Enter your PW.",
                                  QMessageBox::Ok);
         return;}
+    if(makepw.count()>30){
+        QMessageBox::information(NULL, "Warning",
+                                                   "PW should be under 30 characters.",
+                                                     QMessageBox::Ok);
+                            return;}
+
+    QString checkpw=ui->rePWsf->text().trimmed();
+    if(0!=(makepw.compare(checkpw))){
+        QMessageBox::information(NULL, "Warning",
+                                 "Check your PW.",
+                                 QMessageBox::Ok);
+    }
     //encryption
     SimpleCrypt crypto;
     crypto.setKey(0x0c2ad4a4acb9f023);
@@ -55,4 +74,10 @@ void dlsignin::on_pbSignupform_clicked()
             ugender=0;
 
     socket->write(QString("/makeID:"+ makeid +"/makepw:"+enpw+"/makeemail"+makeEmail+"/makegender"+ugender).toUtf8());
+}
+
+void dlsignin::on_EmailAuthen_clicked() //email authentication
+{
+    QString usremail=ui->leEmail->text().trimmed();
+    //f(x) for email token should be made
 }

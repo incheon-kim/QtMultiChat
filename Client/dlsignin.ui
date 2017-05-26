@@ -25,10 +25,10 @@
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>81</x>
-     <y>83</y>
-     <width>237</width>
-     <height>157</height>
+     <x>60</x>
+     <y>44</y>
+     <width>274</width>
+     <height>254</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -90,6 +90,12 @@
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
         </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
+        </property>
+        <property name="readOnly">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
      </layout>
@@ -97,14 +103,14 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <widget class="QLabel" name="Emaillabel">
+       <widget class="QLabel" name="ReEnterPWlabel">
         <property name="text">
-         <string>Email</string>
+         <string>Verify PW</string>
         </property>
        </widget>
       </item>
       <item>
-       <spacer name="horizontalSpacer_3">
+       <spacer name="horizontalSpacer_4">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>
@@ -117,12 +123,12 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLineEdit" name="leEmail">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+       <widget class="QLineEdit" name="rePWsf">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
+        <property name="echoMode">
+         <enum>QLineEdit::Password</enum>
         </property>
        </widget>
       </item>
@@ -157,6 +163,81 @@
      </layout>
     </item>
     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QLabel" name="Emaillabel">
+        <property name="text">
+         <string>Email</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="leEmail">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="EmailAuthen">
+      <property name="text">
+       <string>Email Authentication</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_6">
+      <item>
+       <widget class="QLabel" name="EnterCode">
+        <property name="text">
+         <string>Enter Code</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="leEmailCode">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
      <widget class="QPushButton" name="pbSignupform">
       <property name="styleSheet">
        <string notr="true"/>
@@ -168,6 +249,16 @@
     </item>
    </layout>
   </widget>
+  <zorder>layoutWidget</zorder>
+  <zorder>Emaillabel</zorder>
+  <zorder>pbSignupform</zorder>
+  <zorder>EmailAuthen</zorder>
+  <zorder>ReEnterPWlabel</zorder>
+  <zorder>rePWsf</zorder>
+  <zorder>horizontalSpacer_4</zorder>
+  <zorder>EnterCode</zorder>
+  <zorder>horizontalSpacer_5</zorder>
+  <zorder>leEmailCode</zorder>
  </widget>
  <resources/>
  <connections/>

@@ -18,6 +18,8 @@ public:
 private slots:
     void on_pbSignupform_clicked();
 
+    void on_EmailAuthen_clicked();
+
 private:
     Ui::dlsignin *ui;
      QTcpSocket* socket;
