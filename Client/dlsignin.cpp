@@ -78,6 +78,37 @@ void dlsignin::on_pbSignupform_clicked()
 
 void dlsignin::on_EmailAuthen_clicked() //email authentication
 {
+    QString makeid=ui->leIDsf->text().trimmed();
+    if (makeid.isEmpty()) {
+        QMessageBox::information(NULL, "Warning",
+                                 "Enter your ID.",
+                                 QMessageBox::Ok);
+        return;}
+    if(makeid.count()>30){ //id sould be under 30 char
+        QMessageBox::information(NULL, "Warning",
+                                                 "ID should be under 30 characters.",
+                                                   QMessageBox::Ok);
+                          return;}
+
+
+    QString makepw=ui->lePWsf->text().trimmed();
+    if (makepw.isEmpty()) {
+        QMessageBox::information(NULL, "Warning",
+                                 "Enter your PW.",
+                                 QMessageBox::Ok);
+        return;}
+    if(makepw.count()>30){
+        QMessageBox::information(NULL, "Warning",
+                                                   "PW should be under 30 characters.",
+                                                     QMessageBox::Ok);
+                            return;}
+
+    QString checkpw=ui->rePWsf->text().trimmed();
+    if(0!=(makepw.compare(checkpw))){
+        QMessageBox::information(NULL, "Warning",
+                                 "Check your PW.",
+                                 QMessageBox::Ok);
+    }
     QString usremail=ui->leEmail->text().trimmed();
     //f(x) for email token should be made
 }
