@@ -11,7 +11,9 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    server.cpp
+    server.cpp \
+    simplecrypt.cpp
 
 HEADERS += \
-    server.h
+    server.h \
+    simplecrypt.h

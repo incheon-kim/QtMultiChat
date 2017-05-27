@@ -7,7 +7,7 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
-#include <QQueue>
+
 #define PORT 1234
 
 
@@ -21,13 +21,9 @@ public slots:
     void onNewConnection();
     void onDisconnect();
     void onReadyRead();
-    void pushClientQueue(QTcpSocket *socket);
-    QTcpSocket* popCilentQueue();
 private:
     QTcpServer* server;
     QMap<QTcpSocket*,QString> clients;
-    QQueue<QTcpSocket*> clientQueue;
-    int size = 0;
 };
 
 #endif // SERVER_H
