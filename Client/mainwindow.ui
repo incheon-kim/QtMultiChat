@@ -95,7 +95,7 @@ QLineEdit {
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>Dongdongju</string>
+          <string>동동주</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
@@ -204,7 +204,7 @@ p, li { white-space: pre-wrap; }
                 <string notr="true">background-color: rgb(255, 255, 255);</string>
                </property>
                <property name="text">
-                <string>Send</string>
+                <string>전송</string>
                </property>
                <property name="default">
                 <bool>true</bool>
@@ -248,7 +248,7 @@ selection-color: rgb(255, 255, 255);</string>
                      <string notr="true">background-color: rgb(184, 214, 255);</string>
                     </property>
                     <property name="text">
-                     <string>ID  </string>
+                     <string>아이디</string>
                     </property>
                    </widget>
                   </item>
@@ -258,7 +258,7 @@ selection-color: rgb(255, 255, 255);</string>
                      <string notr="true">background-color: rgb(184, 214, 255);</string>
                     </property>
                     <property name="text">
-                     <string>PW  </string>
+                     <string>비밀번호</string>
                     </property>
                    </widget>
                   </item>
@@ -316,7 +316,7 @@ selection-color: rgb(255, 255, 255);</string>
                    <string notr="true">background-color: rgb(184, 214, 255);</string>
                   </property>
                   <property name="text">
-                   <string>Login</string>
+                   <string>로그인</string>
                   </property>
                  </widget>
                 </item>
@@ -326,7 +326,7 @@ selection-color: rgb(255, 255, 255);</string>
                    <string notr="true">background-color: rgb(184, 214, 255);</string>
                   </property>
                   <property name="text">
-                   <string>Sign up</string>
+                   <string>회원가입</string>
                   </property>
                  </widget>
                 </item>
@@ -359,12 +359,13 @@ selection-color: rgb(255, 255, 255);</string>
   </widget>
  </widget>
  <tabstops>
-  <tabstop>lePW</tabstop>
   <tabstop>leID</tabstop>
+  <tabstop>lePW</tabstop>
+  <tabstop>pbLogin</tabstop>
+  <tabstop>pbSignup</tabstop>
   <tabstop>teChat</tabstop>
   <tabstop>lwUsers</tabstop>
   <tabstop>leMessage</tabstop>
-  <tabstop>pbLogin</tabstop>
   <tabstop>pbSend</tabstop>
  </tabstops>
  <resources/>

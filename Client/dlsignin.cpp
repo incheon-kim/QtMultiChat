@@ -111,6 +111,7 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
         return;
     }
     QString userEmail=ui->leEmail->text().trimmed();
+    userEmail+=ui->emailCombo->currentText();
 
     // make token value from email
     QString userToken;

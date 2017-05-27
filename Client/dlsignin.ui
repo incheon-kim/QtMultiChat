@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>384</width>
-    <height>327</height>
+    <height>462</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -25,10 +25,10 @@
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>44</y>
-     <width>274</width>
-     <height>254</height>
+     <x>46</x>
+     <y>32</y>
+     <width>286</width>
+     <height>272</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -37,7 +37,7 @@
       <item>
        <widget class="QLabel" name="IDlabel">
         <property name="text">
-         <string>ID       </string>
+         <string>아이디</string>
         </property>
        </widget>
       </item>
@@ -68,7 +68,7 @@
       <item>
        <widget class="QLabel" name="PWlabel">
         <property name="text">
-         <string>PW    </string>
+         <string>비밀번호</string>
         </property>
        </widget>
       </item>
@@ -105,7 +105,7 @@
       <item>
        <widget class="QLabel" name="ReEnterPWlabel">
         <property name="text">
-         <string>Verify PW</string>
+         <string>비밀번호확인</string>
         </property>
        </widget>
       </item>
@@ -139,14 +139,14 @@
       <item>
        <widget class="QLabel" name="Genderlabel">
         <property name="text">
-         <string>Gender</string>
+         <string>성별</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QRadioButton" name="Male">
         <property name="text">
-         <string>Male</string>
+         <string>남성</string>
         </property>
         <property name="checked">
          <bool>true</bool>
@@ -156,7 +156,7 @@
       <item>
        <widget class="QRadioButton" name="Female">
         <property name="text">
-         <string>Female</string>
+         <string>여성</string>
         </property>
        </widget>
       </item>
@@ -167,22 +167,9 @@
       <item>
        <widget class="QLabel" name="Emaillabel">
         <property name="text">
-         <string>Email</string>
+         <string>이메일</string>
         </property>
        </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
       <item>
        <widget class="QLineEdit" name="leEmail">
@@ -194,12 +181,29 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QComboBox" name="emailCombo">
+        <property name="mouseTracking">
+         <bool>false</bool>
+        </property>
+        <item>
+         <property name="text">
+          <string>@dongguk.edu</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>@dongguk.ac.kr</string>
+         </property>
+        </item>
+       </widget>
+      </item>
      </layout>
     </item>
     <item>
      <widget class="QPushButton" name="EmailAuthen">
       <property name="text">
-       <string>Email Authentication</string>
+       <string> 인증번호 전송</string>
       </property>
      </widget>
     </item>
@@ -208,7 +212,7 @@
       <item>
        <widget class="QLabel" name="EnterCode">
         <property name="text">
-         <string>Enter Code</string>
+         <string>인증번호 입력</string>
         </property>
        </widget>
       </item>
@@ -243,23 +247,24 @@
        <string notr="true"/>
       </property>
       <property name="text">
-       <string>Sign up!</string>
+       <string>회원가입 하기!</string>
       </property>
      </widget>
     </item>
    </layout>
   </widget>
-  <zorder>layoutWidget</zorder>
-  <zorder>Emaillabel</zorder>
-  <zorder>pbSignupform</zorder>
-  <zorder>EmailAuthen</zorder>
-  <zorder>ReEnterPWlabel</zorder>
-  <zorder>rePWsf</zorder>
-  <zorder>horizontalSpacer_4</zorder>
-  <zorder>EnterCode</zorder>
-  <zorder>horizontalSpacer_5</zorder>
-  <zorder>leEmailCode</zorder>
  </widget>
+ <tabstops>
+  <tabstop>leIDsf</tabstop>
+  <tabstop>lePWsf</tabstop>
+  <tabstop>rePWsf</tabstop>
+  <tabstop>Male</tabstop>
+  <tabstop>Female</tabstop>
+  <tabstop>leEmail</tabstop>
+  <tabstop>EmailAuthen</tabstop>
+  <tabstop>leEmailCode</tabstop>
+  <tabstop>pbSignupform</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
