@@ -56,8 +56,7 @@ void dlsignin::on_pbSignupform_clicked()
     SimpleCrypt crypto;
     crypto.setKey(0x0c2ad4a4acb9f023);
     QString enpw=crypto.encryptToString(makepw);
-    //QString dcpw=crypto.decryptToString(enpw);
-    //QMessageBox::information(NULL, "Warning",enpw,QMessageBox::Ok);
+
     QString makeEmail=ui->leEmail->text().trimmed();
     if(makeEmail.isEmpty()){
         QMessageBox::information(NULL, "Warning",

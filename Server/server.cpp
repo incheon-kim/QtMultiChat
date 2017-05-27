@@ -3,6 +3,7 @@
 #include <QRegExp>
 
 Server::Server(QObject* parent) : QObject(parent) {
+    this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()),
             this,   SLOT(onNewConnection()));
@@ -76,12 +77,13 @@ void Server::onReadyRead() {
         }
 
         else if(signupRex.indexIn(line)!=-1){
+
+
             QString id=signupRex.cap(1);
             QString enpw=signupRex.cap(2);
-
-            QString depw;
+            QString dcpw=crypto.decryptToString(enpw);
             QString email=signupRex.cap(3);
-            int gender=signupRex.cap(4);
+            QString gender=signupRex.cap(4);
 
         }
 
