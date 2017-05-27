@@ -71,11 +71,7 @@ void Server::onReadyRead() {
             QString userID = loginRex.cap(1);
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
-            QSqlQuery query;
-               query.prepare("SELECT ID,PW FROM info WHERE ID=? AND PW=?");
-               query.addBindValue(user);
-               query.addBindValue(userPW);
-               query.exec();
+
             //db open
             if(!db.open()){
                 qDebug()<<"Error opening DB";
@@ -102,27 +98,13 @@ void Server::onReadyRead() {
             QString dcpw=crypto.decryptToString(enpw);
             QString email=signupRex.cap(3);
             QString gender=signupRex.cap(4);
-            QSqlQuery query;
-               query.prepare("INSERT INTO info (ID, PW, Email,Enable,Gender) "
-                             "VALUES (:ID, :PW, :Email, :Enable, :Gender)");
-               query.addBindValue(":ID",id);
-               query.addBindValue(":PW",dcpw);
-               query.addBindValue(":Email",email);
-               query.addBindValue(":Enable",'1');
-               query.addBindValue(":Gender",gender);
 
-               query.exec();
-            //db open
-            if(!db.open()){
-                qDebug()<<"Error opening DB";
-            }
-            else qDebug()<<"db open";
+
+
 
         }
 
-        else {
-            qDebug() << "Bad message from " << socket->peerAddress().toString();
-        }
+
     }
 }
 
@@ -160,6 +142,22 @@ bool DbManager::addPerson(const QString& id,const QString& pw,const QString& ema
       }
 
       return success;
+
+}
+
+bool DbManager::checkLogin(const QString& id,const QString& pw){
+    QSqlQuery query;
+    query.prepare("SELECT ID,PW FROM INFO WHERE ID = (:id), PW = (:pw);");
+    query.bindValue(":id", id);
+    query.bindValue(":pw",pw);
+
+    if (query.exec())
+    {
+       if (query.next())
+       {
+          // it exists
+       }
+    }
 
 }
 
