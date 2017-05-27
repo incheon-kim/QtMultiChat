@@ -103,14 +103,18 @@ void Server::onReadyRead() {
                  qDebug() << id << "signed up!.";
             else
                  qDebug() << id << "error,cannot sign up";
+        }
 
-
+        else if(tokRex.indexIn(line)!=-1){
+            QString userEmail=tokRex.cap(1); //이메일인증 버튼을 누른 클라이언트의 이메일주소
+            QString Token=tokRex.cap(2); // 클라이언트의 이메일로 전송할 토큰값.
+            //클라이언트 이메일로 토큰 전송하는 과정 시작.
 
 
         }
-
-
     }
+
+
 }
 
 

@@ -345,7 +345,7 @@ selection-color: rgb(255, 255, 255);</string>
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>by. dongdongju in Dongguk University</string>
+          <string>by dongdongju in Dongguk University</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
