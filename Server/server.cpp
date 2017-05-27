@@ -2,6 +2,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QtCore/QCoreApplication>
+#include "dbmanager.h"
 
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
@@ -57,7 +58,7 @@ void Server::onReadyRead() {
 
     QString servername = "LOCALHOST\\SQLITE";
     QString dbPath="~/db/db"; //맘대로 바꿔서 쓰세연~
-    db.setConnectOptions();
+
 
     QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
     QRegExp tokRex("^/email:(.*)/Token:(.*)&");
@@ -73,15 +74,12 @@ void Server::onReadyRead() {
             QString userPW = crypto.decryptToString(userEnPW);
 
             //db open
-            if(!db.open()){
-                qDebug()<<"Error opening DB";
-            }
-            else qDebug()<<"db open";
 
-            clients[socket] = user;
-            sendToAll(QString("/system:" + user + " has joined the chat.\n"));
+
+            clients[socket] = userID;
+            sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
             sendUserList();
-            qDebug() << user << "logged in.";
+            qDebug() << userID << "logged in.";
         }
 
         else if (messageRex.indexIn(line) != -1) {
@@ -108,56 +106,4 @@ void Server::onReadyRead() {
     }
 }
 
-DbManager::DbManager(const QString &path)
-{
-    m_db=QSqlDatabase::addDatabase("QSQLITE");
-
-    m_db.setDatabaseName(path);
-    if(!m_db.open()){
-        qDebug()<<"Error: connection with database failed";
-    }
-    else{
-        qDebug()<<"Database: connection ok";
-    }
-
-}
-
-bool DbManager::addPerson(const QString& id,const QString& pw,const QString& email,const QString& gender,const QString& token){
-    QSqlQuery query;
-    query.prepare("INSERT INTO info (ID, PW, Email,Enable,Gender) VALUES (:ID, :PW, :Email, :Enable, :Gender);");
-    query.addBindValue(":ID",id);
-    query.addBindValue(":PW",pw);
-    query.addBindValue(":Email",email);
-    query.addBindValue(":Enable",'1');
-    query.addBindValue(":Gender",gender);
-
-    if(query.exec())
-      {
-          success = true;
-      }
-      else
-      {
-           qDebug() << "addPerson error:"
-                    << query.lastError();
-      }
-
-      return success;
-
-}
-
-bool DbManager::checkLogin(const QString& id,const QString& pw){
-    QSqlQuery query;
-    query.prepare("SELECT ID,PW FROM INFO WHERE ID = (:id), PW = (:pw);");
-    query.bindValue(":id", id);
-    query.bindValue(":pw",pw);
-
-    if (query.exec())
-    {
-       if (query.next())
-       {
-          // it exists
-       }
-    }
-
-}
 

@@ -8,9 +8,7 @@
 #include <QStringList>
 #include <QMap>
 #include "simplecrypt.h"
-#include <QtSql/QSqlDatabase>
-#include <QtDebug>
-#include <QSqlQuery>
+
 
 #define PORT 1234
 
@@ -31,12 +29,6 @@ private:
     SimpleCrypt crypto;
 };
 
-class DbManager
-{
-public:
-    DbManager(const QString& path);
-private:
-    QSqlDatabase m_db;
-};
+
 
 #endif // SERVER_H
