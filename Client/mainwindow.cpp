@@ -38,7 +38,7 @@ void MainWindow::on_pbLogin_clicked() {
     QString userName = ui->leID->text().trimmed();
     if (userName.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
-                                 "Enter your ID.",
+                                 "아이디를 입력해 주세요.",
                                  QMessageBox::Ok);
         return;
     }
@@ -47,7 +47,7 @@ void MainWindow::on_pbLogin_clicked() {
     QString userPW = ui->lePW->text().trimmed();
     if (userPW.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
-                                 "Enter your PW.",
+                                 "비밀번호를 입력해 주세요.",
                                  QMessageBox::Ok);
         return;
     }

@@ -25,12 +25,12 @@ void dlsignin::on_pbSignupform_clicked()
     QString makeid=ui->leIDsf->text().trimmed();
     if (makeid.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
-                                 "Enter your ID.",
+                                 "아이디를 입력해주세요.",
                                  QMessageBox::Ok);
         return;}
     if(makeid.count()>30){ //id sould be under 30 char
         QMessageBox::information(NULL, "Warning",
-                                                 "ID should be under 30 characters.",
+                                                 "아이디는 30자 이내로 입력해 주세요.",
                                                    QMessageBox::Ok);
                           return;}
 
@@ -43,14 +43,14 @@ void dlsignin::on_pbSignupform_clicked()
         return;}
     if(makepw.count()>30){
         QMessageBox::information(NULL, "Warning",
-                                                   "PW should be under 30 characters.",
+                                                   "비밀번호는 30자 이내로 입력해 주세요.",
                                                      QMessageBox::Ok);
                             return;}
 
     QString checkpw=ui->rePWsf->text().trimmed();
     if(0!=(makepw.compare(checkpw))){
         QMessageBox::information(NULL, "Warning",
-                                 "Check your PW.",
+                                 "비밀번호를 다시 확인해 주세요.",
                                  QMessageBox::Ok);
     }
     //encryption
@@ -61,7 +61,7 @@ void dlsignin::on_pbSignupform_clicked()
     QString makeEmail=ui->leEmail->text().trimmed();
     if(makeEmail.isEmpty()){
         QMessageBox::information(NULL, "Warning",
-                                 "Enter your Email.",
+                                 "이메일을 입력해 주세요.",
                                  QMessageBox::Ok);
         return;}
 
@@ -81,12 +81,12 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
     QString makeid=ui->leIDsf->text().trimmed();
     if (makeid.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
-                                 "Enter your ID.",
+                                 "아이디를 입력해 주세요.",
                                  QMessageBox::Ok);
         return;}
     if(makeid.count()>30){ //id sould be under 30 char
         QMessageBox::information(NULL, "Warning",
-                                                 "ID should be under 30 characters.",
+                                                 "아이디는 30자 이내로 입력해 주세요.",
                                                    QMessageBox::Ok);
                           return;}
 
@@ -94,19 +94,19 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
     QString makepw=ui->lePWsf->text().trimmed();
     if (makepw.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
-                                 "Enter your PW.",
+                                 "비밀번호를 입력해 주세요.",
                                  QMessageBox::Ok);
         return;}
     if(makepw.count()>30){
         QMessageBox::information(NULL, "Warning",
-                                                   "PW should be under 30 characters.",
+                                                   "비밀번호는 30자 이내로 입력해 주세요.",
                                                      QMessageBox::Ok);
                             return;}
 
     QString checkpw=ui->rePWsf->text().trimmed();
     if(0!=(makepw.compare(checkpw))){
         QMessageBox::information(NULL, "Warning",
-                                 "Check your PW.",
+                                 "비밀번호를 확인해 주세요.",
                                  QMessageBox::Ok);
         return;
     }
