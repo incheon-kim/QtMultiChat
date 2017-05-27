@@ -77,8 +77,6 @@ void Server::onReadyRead() {
         }
 
         else if(signupRex.indexIn(line)!=-1){
-
-
             QString id=signupRex.cap(1);
             QString enpw=signupRex.cap(2);
             QString dcpw=crypto.decryptToString(enpw);

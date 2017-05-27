@@ -4,6 +4,7 @@
 #include <QCryptographicHash>
 #include "simplecrypt.h"
 #include <QString>
+#include <QDebug>
 
 dlsignin::dlsignin(QWidget *parent) :
     QDialog(parent),
@@ -72,10 +73,10 @@ void dlsignin::on_pbSignupform_clicked()
     else if(ui->Male->isChecked())
             ugender=0;
 
-    socket->write(QString("/makeID:"+ makeid +"/makepw:"+enpw+"/makeemail"+makeEmail+"/makegender"+ugender).toUtf8());
+    socket->write(QString("/makeID:"+ makeid +"/makepw:"+enpw+"/makeemail:"+makeEmail+"/makegender:"+ugender).toUtf8());
 }
 
-void dlsignin::on_EmailAuthen_clicked() //email authentication
+void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
 {
     QString makeid=ui->leIDsf->text().trimmed();
     if (makeid.isEmpty()) {
@@ -107,7 +108,16 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication
         QMessageBox::information(NULL, "Warning",
                                  "Check your PW.",
                                  QMessageBox::Ok);
+        return;
     }
-    QString usremail=ui->leEmail->text().trimmed();
-    //f(x) for email token should be made
+    QString userEmail=ui->leEmail->text().trimmed();
+
+    // make token value from email
+    QString userToken;
+    for(int i=0; i<userEmail.size();i++){
+        if(i % 2 == 0 && userEmail[i] != '@'){
+            userToken += userEmail[i];
+        }
+    }
+    socket->write(QString("/email:"+userEmail+"/Token:"+userToken ).toUtf8());
 }
