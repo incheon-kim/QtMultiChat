@@ -8,7 +8,7 @@ class DbManager
 {
 public:
     DbManager(const QString& path);
-    bool addPerson(const QString& id,const QString& pw,const QString& email,const QString& gender,const QString& token);
+    bool addPerson(const QString& id,const QString& pw,const QString& email,const QString& gender);
     bool checkLogin(const QString& id,const QString& pw);
 private:
     QSqlDatabase m_db;

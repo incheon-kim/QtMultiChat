@@ -14,7 +14,7 @@ DbManager::DbManager(const QString &path)
 
 }
 
-bool DbManager::addPerson(const QString& id,const QString& pw,const QString& email,const QString& gender,const QString& token){
+bool DbManager::addPerson(const QString& id,const QString& pw,const QString& email,const QString& gender){
     QSqlQuery query;
     bool success;
     query.prepare(QString("INSERT INTO info (ID, PW, Email,Enable,Gender) VALUES (:ID, :PW, :Email, :Enable, :Gender)"));
@@ -50,7 +50,9 @@ bool DbManager::checkLogin(const QString& id,const QString& pw){
        if (query.next())
        {
           // it exists
+           return true;
        }
     }
-
+    //not exist
+return false;
 }

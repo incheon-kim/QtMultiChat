@@ -56,9 +56,10 @@ void Server::onDisconnect() {
 
 void Server::onReadyRead() {
 
+
     QString servername = "LOCALHOST\\SQLITE";
     QString dbPath="~/db/db"; //맘대로 바꿔서 쓰세연~
-
+     DbManager db(dbPath);
 
     QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
     QRegExp tokRex("^/email:(.*)/Token:(.*)&");
@@ -73,16 +74,17 @@ void Server::onReadyRead() {
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
 
-            //db open
-
-
+            if(db.checkLogin(userID,userPW)){
             clients[socket] = userID;
             sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
             sendUserList();
             qDebug() << userID << "logged in.";
+            }
+            else return; //로그인 승인불가!
+
         }
 
-        else if (messageRex.indexIn(line) != -1) {
+        else if (messageRex.indexIn(line) != -1) {//메세지 보내기
             QString user = clients.value(socket);
             QString msg = messageRex.cap(1);
             sendToAll(QString(user + ":" + msg + "\n"));
@@ -90,12 +92,17 @@ void Server::onReadyRead() {
             qDebug() << "Message:" << msg;
         }
 
-        else if(signupRex.indexIn(line)!=-1){
+        else if(signupRex.indexIn(line)!=-1){ //회원가입
             QString id=signupRex.cap(1);
             QString enpw=signupRex.cap(2);
             QString dcpw=crypto.decryptToString(enpw);
             QString email=signupRex.cap(3);
             QString gender=signupRex.cap(4);
+            QString Token=signupRex.cap(5);
+            if(db.addPerson(id,dcpw,email,gender))
+                 qDebug() << id << "signed up!.";
+            else
+                 qDebug() << id << "error,cannot sign up";
 
 
 
