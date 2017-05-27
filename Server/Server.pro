@@ -1,7 +1,7 @@
 QT += core
 QT += network
 QT -= gui
-
+QT += sql
 CONFIG += c++11
 
 TARGET = Server

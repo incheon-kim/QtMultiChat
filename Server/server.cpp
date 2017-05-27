@@ -1,6 +1,9 @@
 #include "server.h"
 #include <QString>
 #include <QRegExp>
+#include <QtCore/QCoreApplication>
+#include <QtSql/QSqlDatabase>
+#include <QtDebug>
 
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
