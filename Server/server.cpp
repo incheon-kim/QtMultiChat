@@ -1,120 +1,141 @@
 #include "server.h"
 #include <QString>
 #include <QRegExp>
-#include <QtCore/QCoreApplication>
-#include "dbmanager.h"
+
 
 Server::Server(QObject* parent) : QObject(parent) {
-    this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
-    connect(server, SIGNAL(newConnection()),
-            this,   SLOT(onNewConnection()));
+    connect(server, SIGNAL(newConnection()), this,   SLOT(onNewConnection()));
 
     if (!server->listen(QHostAddress::Any, PORT)) {
-        qDebug() << "Server is not started.";
+        qDebug() << "실행 실패...";
     } else {
-        qDebug() << "Server is started.";
+        qDebug() << "서버가 시작되었습니다.";
     }
 }
 
 
+/* 모든 사용자의 업데이트된 목록을 보내기 */
 void Server::sendUserList() {
-    QString line = "/users:" + clients.values().join(',') + "\n";
+    //사용자 목록을 전달
+    QString line = "/users:" + userInfo.getValues().join(',') + "\n";
     sendToAll(line);
 }
 
 
+
+/* 모든 사용자에게 메시지 보내기 */
 void Server::sendToAll(const QString& msg) {
-    foreach (QTcpSocket* socket, clients.keys()) {
+    foreach (QTcpSocket* socket, userInfo.getUserKeys()) {
         socket->write(msg.toUtf8());
     }
 }
 
-
+/* 서버에 연결될 때 호출되는 슬롯
+ * 새로운 클라이언트 */
 void Server::onNewConnection() {
     QTcpSocket* socket = server->nextPendingConnection();
+    // 로그인되지 않은 상태에서 익명의 클라이언트를 저장
+    userInfo.insert_user(socket, ""); //클라이언트 정보를 UserInfo에 저장
+    clientQueue.enqueue(userInfo); //UserInfo 클래스를 큐에 저장
+    userNumber++; //유저의 수를 하나 늘린다.
     qDebug() << "Client connected: " << socket->peerAddress().toString();
-
+    qDebug() << clientQueue.size() << "명 접속중..."; //현재 몇명이 접속했는지 정보 출력
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
-
-
-    clients.insert(socket, "");
 }
 
-
+/* 클라이언트 연결이 해제 될 때 호출되는 슬롯 */
 void Server::onDisconnect() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     qDebug() << "Client disconnected: " << socket->peerAddress().toString();
-
-    QString username = clients.value(socket);
+    UserInfo user;
+    QString username = user.getUserName(socket);
+    //시스템 메시지
     sendToAll(QString("/system:" + username + " has left the chat.\n"));
-    clients.remove(socket);
+    user.removeUser(socket); //유저를 지운다.
     sendUserList();
 }
 
-
+/*클라이언트에서 데이터 수신*/
 void Server::onReadyRead() {
-
-
-    QString servername = "LOCALHOST\\SQLITE";
-    QString dbPath="~/db/db"; //맘대로 바꿔서 쓰세연~
-     DbManager db(dbPath);
-
-    QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
-    QRegExp tokRex("^/email:(.*)/Token:(.*)&");
-    QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
-    QRegExp messageRex("^/say:(.*)$");
-    QTcpSocket* socket = (QTcpSocket*)sender();
-    while (socket->canReadLine()) {
-        QString line = QString::fromUtf8(socket->readLine()).trimmed();
-
-        if (loginRex.indexIn(line) != -1) { //login
-            QString userID = loginRex.cap(1);
-            QString userEnPW = loginRex.cap(2);
-            QString userPW = crypto.decryptToString(userEnPW);
-
-            if(db.checkLogin(userID,userPW)){
-            clients[socket] = userID;
-            sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
-            sendUserList();
-            qDebug() << userID << "logged in.";
+    if(checkUserNumber() == 2){ //큐에 대기자가 2명이면
+        UserInfo user1 = clientQueue.dequeue(); //큐에서 유저 정보를 빼온다.
+        UserInfo user2 = clientQueue.dequeue(); //큐에서 유저 정보를 빼온다.
+        QRegExp loginRex("^/login:(.*)$");
+        QRegExp messageRex("^/say:(.*)$");
+        QTcpSocket* socket = (QTcpSocket*)sender();
+        while (socket->canReadLine()) {
+            QString line = QString::fromUtf8(socket->readLine()).trimmed();
+            /* 메시지 - 사용자 로그 */
+            if (loginRex.indexIn(line) != -1) {
+                QString user = loginRex.cap(1);
+                userInfo.setUserName(socket, user); //유저 이름을 해당 키에 저장
+                //시스템 메시지
+                sendToAll(QString("/system:" + user + "님께서 입장하셨습니다.\n"));
+                sendUserList();
+                qDebug() << user << "logged in.";
             }
-            else return; //로그인 승인불가!
-
-        }
-
-        else if (messageRex.indexIn(line) != -1) {//메세지 보내기
-            QString user = clients.value(socket);
-            QString msg = messageRex.cap(1);
-            sendToAll(QString(user + ":" + msg + "\n"));
-            qDebug() << "User:" << user;
-            qDebug() << "Message:" << msg;
-        }
-
-        else if(signupRex.indexIn(line)!=-1){ //회원가입
-            QString id=signupRex.cap(1);
-            QString enpw=signupRex.cap(2);
-            QString dcpw=crypto.decryptToString(enpw);
-            QString email=signupRex.cap(3);
-            QString gender=signupRex.cap(4);
-            QString Token=signupRex.cap(5);
-            if(db.addPerson(id,dcpw,email,gender))
-                 qDebug() << id << "signed up!.";
-            else
-                 qDebug() << id << "error,cannot sign up";
-        }
-
-        else if(tokRex.indexIn(line)!=-1){
-            QString userEmail=tokRex.cap(1); //이메일인증 버튼을 누른 클라이언트의 이메일주소
-            QString Token=tokRex.cap(2); // 클라이언트의 이메일로 전송할 토큰값.
-            //클라이언트 이메일로 토큰 전송하는 과정 시작.
-
-
+            /* 채팅 메시지 */
+            else if (messageRex.indexIn(line) != -1) {
+                QString user = userInfo.getValue(socket);
+                QString msg = messageRex.cap(1);
+                sendToAll(QString(user + ":" + msg + "\n"));
+                qDebug() << "User:" << user;
+                qDebug() << "Message:" << msg;
+            }
+            /* 클라이언트에서 잘못된 메시지 */
+            else {
+                qDebug() << "Bad message from " << socket->peerAddress().toString();
+            }
         }
     }
-
-
+    else{
+        QRegExp loginRex("^/login:(.*)$");
+        QRegExp messageRex("^/say:(.*)$");
+        QTcpSocket* socket = (QTcpSocket*)sender();
+        while (socket->canReadLine()) {
+            QString line = QString::fromUtf8(socket->readLine()).trimmed();
+            /* 메시지 - 사용자 로그 */
+            if (loginRex.indexIn(line) != -1) {
+                QString user = loginRex.cap(1);
+                userInfo.setUserName(socket, user); //유저 이름을 해당 키에 저장
+                sendToAll(QString("/system:" + user + "님께서 입장하셨습니다. \n"));
+                sendUserList();
+                qDebug() << user << "logged in.";
+            }
+            /* 채팅 메시지 */
+            else if (messageRex.indexIn(line) != -1) {
+                QString user = userInfo.getValue(socket);
+                QString msg = messageRex.cap(1);
+                sendToAll(QString(user + ":" + msg + "\n"));
+                qDebug() << "User:" << user;
+                qDebug() << "Message:" << msg;
+            }
+            /* 클라이언트에서 잘못된 메시지 */
+            else {
+                qDebug() << "Bad message from " << socket->peerAddress().toString();
+            }
+        }
+    }
 }
+
+int Server::checkUserNumber(){
+   return clientQueue.size();
+}
+
+void Server::makeRoom(){
+    //유저 2명 정보 리스트에 저장
+    //curUser.push_back(clientQueue.dequeue());
+    //curUser.push_back(clientQueue.dequeue());
+    UserInfo user1;
+    UserInfo user2;
+    user1 = clientQueue.dequeue();
+    userNumber--;
+    user2 = clientQueue.dequeue();
+    userNumber--;
+    onReadyRead();
+}
+
 
 
