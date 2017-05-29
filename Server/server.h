@@ -7,28 +7,31 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
-#include "simplecrypt.h"
-
-
+#include <QQueue>
+#include <QVector>
+#include "roommanager.h"
 #define PORT 1234
-
-
+class RoomManager;
+class GameUser;
 class Server : QObject {
     Q_OBJECT
 public:
     explicit Server(QObject* parent = 0);
     void sendUserList();
-    void sendToAll(const QString&);
+    void sendToTarget(const QString& msg, QTcpSocket* sender);
+    void sendToAll(const QString& msg);
+    int sizeUserList();
 public slots:
     void onNewConnection();
     void onDisconnect();
     void onReadyRead();
 private:
+    RoomManager *r;
     QTcpServer* server;
     QMap<QTcpSocket*,QString> clients;
-    SimpleCrypt crypto;
+    QQueue<GameUser> userList; //all user
+    int userNumber;
 };
 
+#endif //
 
-
-#endif // SERVER_H

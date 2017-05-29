@@ -1,36 +1,59 @@
 #include "server.h"
 #include <QString>
 #include <QRegExp>
-#include <QtCore/QCoreApplication>
-#include "dbmanager.h"
 
 Server::Server(QObject* parent) : QObject(parent) {
-    this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()),
             this,   SLOT(onNewConnection()));
 
-    if (!server->listen(QHostAddress::Any, PORT)) {
+    r=new RoomManager();
+
+    if (!server->listen(QHostAddress::Any, PORT)) 
+    {
         qDebug() << "Server is not started.";
-    } else {
+    } 
+    else 
+    {
         qDebug() << "Server is started.";
     }
 }
 
-
-void Server::sendUserList() {
+void Server::sendUserList() 
+{
     QString line = "/users:" + clients.values().join(',') + "\n";
-    sendToAll(line);
+    //sendToAll(line);
 }
 
-
-void Server::sendToAll(const QString& msg) {
-    foreach (QTcpSocket* socket, clients.keys()) {
-        socket->write(msg.toUtf8());
+/*
+//Отправить сообщение всем пользователям
+void Server::sendToTarget(const QString& msg, QTcpSocket* sender) 
+{
+    GameRoom* TargetRoom;
+    qDebug()<<"send start";
+    for(int i=0; i<userList.count();i++)
+    {
+        if(userList[i].getSocket()==sender){
+            TargetRoom = userList[i].room;
+            break;
+        }
+    }
+    for(int i=0; i<userList.count();i++){
+        if(userList[i].room == TargetRoom){
+            userList[i].getSocket()->write(msg.toUtf8());
+        }
     }
 }
+*/
+void Server::sendToAll(const QString& msg){
+    foreach (QTcpSocket* socket, clients.keys()) {
 
+            socket->write(msg.toUtf8());
+        }
+}
 
+/* Слот, который вызывается, когда к серверу подключается
+ * новый клиент */
 void Server::onNewConnection() {
     QTcpSocket* socket = server->nextPendingConnection();
     qDebug() << "Client connected: " << socket->peerAddress().toString();
@@ -38,83 +61,85 @@ void Server::onNewConnection() {
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
 
-
-    clients.insert(socket, "");
+    // оставим клиента безымянным пока он не залогинится
+    GameUser newUser(socket);
+    userList.enqueue(newUser);
+    qDebug()<<userList.count();
+    userNumber++;
+    qDebug()<<"user added";
 }
 
-
+/* Слот, вызываемый при отключении клиента */
 void Server::onDisconnect() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     qDebug() << "Client disconnected: " << socket->peerAddress().toString();
 
     QString username = clients.value(socket);
-    sendToAll(QString("/system:" + username + " has left the chat.\n"));
+    //sendToAll(QString("/system:" + username + " has left the chat.\n"));
     clients.remove(socket);
     sendUserList();
 }
 
-
+/* Прием данных от клиента */
 void Server::onReadyRead() {
+    GameRoom* room;
+    qDebug()<<"not started pop";
+    qDebug()<<sizeUserList();
+    if(sizeUserList()>=2)
+    {
+        qDebug()<<"pop started";
+        GameUser player1 = userList.dequeue();
+        GameUser player2 = userList.dequeue();
+        //userList.dequeue();
 
+        room = r->createRoom();
 
-    QString servername = "LOCALHOST\\SQLITE";
-    QString dbPath="~/db/db"; //맘대로 바꿔서 쓰세연~
-     DbManager db(dbPath);
+        player1.enterRoom(room);
+        player2.enterRoom(room);
 
-    QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
-    QRegExp tokRex("^/email:(.*)/Token:(.*)&");
-    QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
+        room->sendToTarget(QString("room make"),player1.getSocket());
+    }
+
+    QRegExp loginRex("^/login:(.*)$");
     QRegExp messageRex("^/say:(.*)$");
     QTcpSocket* socket = (QTcpSocket*)sender();
-    while (socket->canReadLine()) {
+
+    while (socket->canReadLine()) 
+    {
+
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
-
-        if (loginRex.indexIn(line) != -1) { //login
-            QString userID = loginRex.cap(1);
-            QString userEnPW = loginRex.cap(2);
-            QString userPW = crypto.decryptToString(userEnPW);
-
-            if(db.checkLogin(userID,userPW)){
-            clients[socket] = userID;
-            sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
-            sendUserList();
-            qDebug() << userID << "logged in.";
-            }
-            else return; //로그인 승인불가!
-
+        // Сообщение - пользователь логинится
+        if (loginRex.indexIn(line) != -1) {
+            QString user = loginRex.cap(1);
+            clients[socket] = user;
+            //qDebug()<<"test";
+            //sendToTarget(QString("Hello"),socket);
+            sendToAll(QString("/system:" + user + " has joined the chat.\n"));
+            //sendUserList();
+            qDebug() << user << "logged in.";
         }
-
-        else if (messageRex.indexIn(line) != -1) {//메세지 보내기
+        // Сообщение в чат
+        else if (messageRex.indexIn(line) != -1) {
             QString user = clients.value(socket);
             QString msg = messageRex.cap(1);
+            room->sendToTarget(QString("msggggggggggggg"),socket); //new added
+            qDebug()<<"VERIFY "<<room;
             sendToAll(QString(user + ":" + msg + "\n"));
             qDebug() << "User:" << user;
             qDebug() << "Message:" << msg;
         }
-
-        else if(signupRex.indexIn(line)!=-1){ //회원가입
-            QString id=signupRex.cap(1);
-            QString enpw=signupRex.cap(2);
-            QString dcpw=crypto.decryptToString(enpw);
-            QString email=signupRex.cap(3);
-            QString gender=signupRex.cap(4);
-            QString Token=signupRex.cap(5);
-            if(db.addPerson(id,dcpw,email,gender))
-                 qDebug() << id << "signed up!.";
-            else
-                 qDebug() << id << "error,cannot sign up";
-        }
-
-        else if(tokRex.indexIn(line)!=-1){
-            QString userEmail=tokRex.cap(1); //이메일인증 버튼을 누른 클라이언트의 이메일주소
-            QString Token=tokRex.cap(2); // 클라이언트의 이메일로 전송할 토큰값.
-            //클라이언트 이메일로 토큰 전송하는 과정 시작.
-
-
+        //Некорректное сообщение от клиента
+        else {
+            qDebug() << "Bad message from " << socket->peerAddress().toString();
         }
     }
 
-
 }
 
+int Server::sizeUserList()
+{
+    int size;
+    size=userList.count();
+    return size;
+}
 
