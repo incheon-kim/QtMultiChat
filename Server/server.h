@@ -7,8 +7,7 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
-#include "simplecrypt.h"
-
+#include <QVector>
 
 #define PORT 1234
 
@@ -26,9 +25,9 @@ public slots:
 private:
     QTcpServer* server;
     QMap<QTcpSocket*,QString> clients;
-    SimpleCrypt crypto;
+    int room_Number[10] = {0};
+    int room_Pointer = 1;
+    int room_Current = 0;
 };
-
-
 
 #endif // SERVER_H

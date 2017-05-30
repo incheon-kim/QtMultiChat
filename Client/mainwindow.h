@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include <QRegExpValidator>
-#include "dlsignin.h"
+
 #define PORT 1234
 
 
@@ -20,18 +20,17 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 public slots:
+
 private slots:
     void on_pbLogin_clicked();
     void on_pbSend_clicked();
     void onReadyRead();
     void onConnected();
     void onDisconnected();
-    void on_pbSignup_clicked();
-
 private:
     Ui::MainWindow *ui;
     QTcpSocket* socket;
+    int number = 0;
 };
-
 
 #endif // MAINWINDOW_H

@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
         <file>user.png</file>
-        <file>user1.png</file>
     </qresource>
 </RCC>

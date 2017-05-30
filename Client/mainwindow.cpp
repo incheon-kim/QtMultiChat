@@ -1,24 +1,23 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "dlsignin.h"
 #include <QRegExp>
 #include <QMessageBox>
 #include <QListWidgetItem>
-#include <QTcpSocket>
-#include "simplecrypt.h"
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setCentralWidget(ui->mainFrame);
-    connect(ui->leID, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
-    connect(ui->lePW, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
+    connect(ui->leServer, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
+    connect(ui->leName, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
     connect(ui->leMessage, SIGNAL(returnPressed()), this, SLOT(on_pbSend_clicked()));
-    connect(ui->pbSignup,SIGNAL(returnPressed()),this,SLOT(on_pbSignup_clicked()));
 
+    /* Имя пользователя должно содержать только латинские буквы,
+     * цифры и символы подчеркивания и начинаться только с букв */
     QRegExp regex("^[a-zA-Z]\\w+");
-    ui->leID->setValidator(new QRegExpValidator(regex, this));
+    ui->leName->setValidator(new QRegExpValidator(regex, this));
 
     socket = new QTcpSocket(this);
     connect(socket, SIGNAL(connected()), this, SLOT(onConnected()));
@@ -27,74 +26,80 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 MainWindow::~MainWindow() {
-    socket->close();
     delete ui;
 }
 
 void MainWindow::on_pbLogin_clicked() {
+    /* Проверка ввода адреса */
+    QString serverName = "127.0.0.1";
+    if (serverName.isEmpty()) {
+        QMessageBox::information(NULL, "Warning",
+                                 "Enter the server name or address.",
+                                 QMessageBox::Ok);
+        return;
+    }
 
-
-
-    QString userName = ui->leID->text().trimmed();
+    /* Проверка ввода имени пользователя */
+    QString userName = ui->leName->text().trimmed();
     if (userName.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
-                                 "아이디를 입력해 주세요.",
+                                 "Enter your nickname.",
                                  QMessageBox::Ok);
         return;
     }
 
-
-    QString userPW = ui->lePW->text().trimmed();
-    if (userPW.isEmpty()) {
-        QMessageBox::information(NULL, "Warning",
-                                 "비밀번호를 입력해 주세요.",
-                                 QMessageBox::Ok);
-        return;
-    }
-    SimpleCrypt crypto;
-    crypto.setKey(0x0c2ad4a4acb9f023);
-    QString cpw=crypto.encryptToString(userPW);
-
-socket->write(QString("/userID:"+userName+"/userPW"+cpw).toUtf8());
-socket->waitForBytesWritten(10);
-
+    socket->connectToHost(serverName, PORT);
 }
 
 void MainWindow::on_pbSend_clicked() {
     QString message = ui->leMessage->text().trimmed();
     if (!message.isEmpty()) {
-        socket->write(QString("/say:" + message + "\n").toUtf8());
+        QString sNumber = QString::number(this->number);
+        socket->write(QString(sNumber + ":" + "/say:" + message + "\n").toUtf8());
         ui->leMessage->clear();
         ui->leMessage->setFocus();
     }
 }
 
 void MainWindow::onReadyRead() {
+    QRegExp numberRex("^(.*):([0-9])$");
     QRegExp usersRex("^/users:(.*)$");
     QRegExp systemRex("^/system:(.*)$");
-    QRegExp messageRex("^(.*):(.*)$");
-    while (socket->canReadLine()) {
-        QString line = QString::fromUtf8(socket->readLine()).trimmed();
+    QRegExp messageRex("^(.*):(.*):(.*)$");
 
-        if (usersRex.indexIn(line) != -1) {
-            QStringList users = usersRex.cap(1).split(",");
+    while (socket->canReadLine()) {
+
+        QString line = QString::fromUtf8(socket->readLine()).trimmed();
+        QString sNumber;
+        qDebug() << "클라이언트 테스트: " << line;
+        if(numberRex.indexIn(line) != -1){ //클라이언트에 번호 부여
+            sNumber = numberRex.cap(2);
+            if(this->number == 0){
+                this->number = sNumber.toInt();
+                qDebug() << "클라이언트 테스트222"<< this->number;
+            }
+        }
+        else if (usersRex.indexIn(line) != -1) {
+            QStringList users = usersRex.cap(2).split(",");
             ui->lwUsers->clear();
             foreach (QString user, users) {
-                 new QListWidgetItem(QIcon(":/user.png"), user, ui->lwUsers);
+                new QListWidgetItem(QIcon(":/user.png"), user, ui->lwUsers);
             }
-
-            }
-
-
+        }
+        // Системное сообщение
         else if (systemRex.indexIn(line) != -1) {
             QString msg = systemRex.cap(1);
             ui->teChat->append("<p color=\"gray\">" + msg + "</p>\n");
         }
-
+        // Если сообщение - от пользователя
         else if (messageRex.indexIn(line) != -1) {
-            QString user = messageRex.cap(1);
-            QString message = messageRex.cap(2);
-            ui->teChat->append("<p><b>" + user + "</b>: " + message + "</p>\n");
+            QString curNumber = messageRex.cap(1);
+            if(number == curNumber.toInt()){
+                qDebug() << "숫자 변환 테스트: " <<sNumber.toInt();
+                QString user = messageRex.cap(2);
+                QString message = messageRex.cap(3);
+                ui->teChat->append("<p><b>" + user + "</b>: " + message + "</p>\n");
+            }
         }
     }
 }
@@ -103,7 +108,7 @@ void MainWindow::onConnected() {
     ui->teChat->clear();
 
     ui->stackedWidget->setCurrentWidget(ui->chatPage);
-    socket->write(QString("/login:" + ui->leID->text() + "\n").toUtf8());
+    socket->write(QString("/login:" + ui->leName->text() + "\n").toUtf8());
     ui->leMessage->setFocus();
 }
 
@@ -111,15 +116,4 @@ void MainWindow::onDisconnected() {
     QMessageBox::warning(NULL, "Warning",
                          "You have been disconnected from the server", QMessageBox::Ok);
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
-}
-
-
-
-
-void MainWindow::on_pbSignup_clicked()
-{
-
-    dlsignin form;
-    form.setModal(true);
-    form.exec();
 }

@@ -1,11 +1,8 @@
 #include "server.h"
 #include <QString>
 #include <QRegExp>
-#include <QtCore/QCoreApplication>
-#include "dbmanager.h"
 
 Server::Server(QObject* parent) : QObject(parent) {
-    this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
     connect(server, SIGNAL(newConnection()),
             this,   SLOT(onNewConnection()));
@@ -17,32 +14,44 @@ Server::Server(QObject* parent) : QObject(parent) {
     }
 }
 
-
+/* Отправить всем обновленный список пользователей */
 void Server::sendUserList() {
     QString line = "/users:" + clients.values().join(',') + "\n";
     sendToAll(line);
 }
 
-
+/* Отправить сообщение всем пользователям */
 void Server::sendToAll(const QString& msg) {
     foreach (QTcpSocket* socket, clients.keys()) {
         socket->write(msg.toUtf8());
     }
 }
 
-
+/* Слот, который вызывается, когда к серверу подключается
+ * новый клиент */
 void Server::onNewConnection() {
     QTcpSocket* socket = server->nextPendingConnection();
+    QString number;
+    if(room_Number[room_Pointer] <= 1){
+        ++room_Number[room_Pointer];
+        number = "number";
+    }
+    else{
+        ++room_Number[++room_Pointer];
+    }
+    qDebug() << "소켓에 번호 부여: " << room_Pointer;
     qDebug() << "Client connected: " << socket->peerAddress().toString();
+
 
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
-
-
+    // оставим клиента безымянным пока он не залогинится
     clients.insert(socket, "");
+    QString tmp = QString::number(room_Pointer);
+    sendToAll(QString(number + ":" + tmp + "\n"));
 }
 
-
+/* Слот, вызываемый при отключении клиента */
 void Server::onDisconnect() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     qDebug() << "Client disconnected: " << socket->peerAddress().toString();
@@ -53,68 +62,35 @@ void Server::onDisconnect() {
     sendUserList();
 }
 
-
+/* Прием данных от клиента */
 void Server::onReadyRead() {
-
-
-    QString servername = "LOCALHOST\\SQLITE";
-    QString dbPath="~/db/db"; //맘대로 바꿔서 쓰세연~
-     DbManager db(dbPath);
-
-    QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
-    QRegExp tokRex("^/email:(.*)/Token:(.*)&");
-    QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
-    QRegExp messageRex("^/say:(.*)$");
+    QRegExp loginRex("^/login:(.*)$");
+    QRegExp messageRex("^(.*):/say:(.*)$");
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
-
-        if (loginRex.indexIn(line) != -1) { //login
-            QString userID = loginRex.cap(1);
-            QString userEnPW = loginRex.cap(2);
-            QString userPW = crypto.decryptToString(userEnPW);
-
-            if(db.checkLogin(userID,userPW)){
-            clients[socket] = userID;
-            sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
+        /* Сообщение - пользователь логинится */
+        if (loginRex.indexIn(line) != -1) {
+            QString user = loginRex.cap(1);
+            clients[socket] = user;
+            sendToAll(QString("/system:" + user + " has joined the chat.\n"));
             sendUserList();
-            qDebug() << userID << "logged in.";
-            }
-            else return; //로그인 승인불가!
-
+            qDebug() << user << "logged in.";
         }
-
-        else if (messageRex.indexIn(line) != -1) {//메세지 보내기
+        /* Сообщение в чат */
+        else if (messageRex.indexIn(line) != -1) {
             QString user = clients.value(socket);
-            QString msg = messageRex.cap(1);
-            sendToAll(QString(user + ":" + msg + "\n"));
+            QString num = messageRex.cap(1);
+            qDebug() << "넘버링 테스트: "<<num;
+            QString msg = messageRex.cap(2);
+            sendToAll(QString(num + ":" + user + ":" + msg + "\n"));
             qDebug() << "User:" << user;
             qDebug() << "Message:" << msg;
         }
-
-        else if(signupRex.indexIn(line)!=-1){ //회원가입
-            QString id=signupRex.cap(1);
-            QString enpw=signupRex.cap(2);
-            QString dcpw=crypto.decryptToString(enpw);
-            QString email=signupRex.cap(3);
-            QString gender=signupRex.cap(4);
-            QString Token=signupRex.cap(5);
-            if(db.addPerson(id,dcpw,email,gender))
-                 qDebug() << id << "signed up!.";
-            else
-                 qDebug() << id << "error,cannot sign up";
-        }
-
-        else if(tokRex.indexIn(line)!=-1){
-            QString userEmail=tokRex.cap(1); //이메일인증 버튼을 누른 클라이언트의 이메일주소
-            QString Token=tokRex.cap(2); // 클라이언트의 이메일로 전송할 토큰값.
-            //클라이언트 이메일로 토큰 전송하는 과정 시작.
-
-
+        /* Некорректное сообщение от клиента */
+        else {
+            qDebug() << "Bad message from " << socket->peerAddress().toString();
         }
     }
-
-
 }
-
 
