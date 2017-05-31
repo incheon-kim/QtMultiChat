@@ -2,7 +2,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QtCore/QCoreApplication>
-#include "dbmanager.h"
+#define Path_to_DB "/home/kim/db/dongdongju.db"
 
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
@@ -15,9 +15,25 @@ Server::Server(QObject* parent) : QObject(parent) {
     } else {
         qDebug() << "Server is started.";
     }
+    myDB= QSqlDatabase::addDatabase("QSQLITE");
+    myDB.setDatabaseName(Path_to_DB);
+    QFileInfo checkFile(Path_to_DB);
+
+    if(checkFile.isFile()){
+        if(myDB.open()){
+            qDebug()<<"[+]DB is open";
+        }
+
+    }
+    else{
+        qDebug()<<"[!]DB error: file not exist";
+    }
 }
 
 
+Server::~Server(){
+    myDB.close();
+}
 void Server::sendUserList() {
     QString line = "/users:" + clients.values().join(',') + "\n";
     sendToAll(line);
@@ -56,15 +72,11 @@ void Server::onDisconnect() {
 
 void Server::onReadyRead() {
 
-
-    QString servername = "LOCALHOST\\SQLITE";
-    QString dbPath="~/db/db"; //맘대로 바꿔서 쓰세연~
-     DbManager db(dbPath);
-
     QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
     QRegExp tokRex("^/email:(.*)/Token:(.*)&");
     QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
     QRegExp messageRex("^/say:(.*)$");
+    QSqlQuery query;
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
@@ -74,15 +86,22 @@ void Server::onReadyRead() {
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
 
-            if(db.checkLogin(userID,userPW)){
-            clients[socket] = userID;
-            sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
-            sendUserList();
-            qDebug() << userID << "logged in.";
+
+            if(query.exec("SELECT ID,PW FROM info WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'")){
+                if(query.next()){
+                clients[socket] = userID;
+                sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
+                sendUserList();
+                qDebug() << userID << "logged in.";
+                }
+
+                else return; //로그인 승인불가!
             }
-            else return; //로그인 승인불가!
+
+
 
         }
+
 
         else if (messageRex.indexIn(line) != -1) {//메세지 보내기
             QString user = clients.value(socket);
@@ -99,8 +118,9 @@ void Server::onReadyRead() {
             QString email=signupRex.cap(3);
             QString gender=signupRex.cap(4);
             QString Token=signupRex.cap(5);
-            if(db.addPerson(id,dcpw,email,gender))
+            if(query.exec("INSERT INTO info VALUES(\'"+id+"\',\'"+dcpw+"\',\'"+email+"\',\'"+gender+"\',1")){
                  qDebug() << id << "signed up!.";
+            }
             else
                  qDebug() << id << "error,cannot sign up";
         }

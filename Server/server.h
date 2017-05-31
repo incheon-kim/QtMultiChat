@@ -8,7 +8,11 @@
 #include <QStringList>
 #include <QMap>
 #include "simplecrypt.h"
-
+#include <QtSql/QSqlDatabase>
+#include <QtDebug>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QFileInfo>
 
 #define PORT 1234
 
@@ -19,6 +23,7 @@ public:
     explicit Server(QObject* parent = 0);
     void sendUserList();
     void sendToAll(const QString&);
+    ~Server();
 public slots:
     void onNewConnection();
     void onDisconnect();
@@ -27,6 +32,7 @@ private:
     QTcpServer* server;
     QMap<QTcpSocket*,QString> clients;
     SimpleCrypt crypto;
+    QSqlDatabase myDB;
 };
 
 

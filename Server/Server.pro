@@ -12,10 +12,8 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     server.cpp \
-    simplecrypt.cpp \
-    dbmanager.cpp
+    simplecrypt.cpp
 
 HEADERS += \
     server.h \
-    simplecrypt.h \
-    dbmanager.h
+    simplecrypt.h
