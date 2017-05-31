@@ -7,6 +7,7 @@
 QT       += core gui
 QT       += network
 
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = Client
@@ -15,14 +16,17 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     mainwindow.cpp \
-    user.cpp
+    dlsignin.cpp \
+    simplecrypt.cpp
 
 HEADERS  += \
     mainwindow.h \
-    user.h
+    dlsignin.h \
+    simplecrypt.h
 
 FORMS    += \
-    mainwindow.ui
+    mainwindow.ui \
+    dlsignin.ui
 
 RESOURCES += \
     icons.qrc

@@ -10,7 +10,13 @@
 #include <QVector>
 #include "roommanager.h"
 #include "room.h"
-
+#include <QtSql/QSqlDatabase>
+#include <QtDebug>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QFileInfo>
+#include "server.h"
+#include "simplecrypt.h"
 #define PORT 1234
 
 
@@ -20,6 +26,7 @@ public:
     explicit Server(QObject* parent = 0);
     void sendUserList();
     void sendToAll(const QString&);
+    ~Server();
 public slots:
     void onNewConnection();
     void onDisconnect();
@@ -31,6 +38,8 @@ private:
     int room_Pointer = 1;
     int room_Current = 0; //allocated room
     //Roommanager *manager;
+    QSqlDatabase myDB;
+    SimpleCrypt crypto;
 };
 
 #endif // SERVER_H
