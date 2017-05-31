@@ -8,6 +8,8 @@
 #include <QStringList>
 #include <QMap>
 #include <QVector>
+#include "roommanager.h"
+#include "room.h"
 
 #define PORT 1234
 
@@ -25,9 +27,10 @@ public slots:
 private:
     QTcpServer* server;
     QMap<QTcpSocket*,QString> clients;
-    int room_Number[10] = {0};
+    int room[10] = {0};
     int room_Pointer = 1;
-    int room_Current = 0;
+    int room_Current = 0; //allocated room
+    //Roommanager *manager;
 };
 
 #endif // SERVER_H

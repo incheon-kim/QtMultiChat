@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include <QRegExpValidator>
-
+#include "user.h"
 #define PORT 1234
 
 
@@ -29,8 +29,9 @@ private slots:
     void onDisconnected();
 private:
     Ui::MainWindow *ui;
+    User *user;
     QTcpSocket* socket;
-    int number = 0;
+    int clientRoomNumber = 0; //client's own number;
 };
 
 #endif // MAINWINDOW_H

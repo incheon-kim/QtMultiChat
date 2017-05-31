@@ -11,7 +11,11 @@ CONFIG -= app_bundle
 TEMPLATE = app
 
 SOURCES += main.cpp \
-    server.cpp
+    server.cpp \
+    roommanager.cpp \
+    room.cpp
 
 HEADERS += \
-    server.h
+    server.h \
+    roommanager.h \
+    room.h

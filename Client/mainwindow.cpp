@@ -19,10 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     QRegExp regex("^[a-zA-Z]\\w+");
     ui->leName->setValidator(new QRegExpValidator(regex, this));
 
-    socket = new QTcpSocket(this);
-    connect(socket, SIGNAL(connected()), this, SLOT(onConnected()));
-    connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
-    connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+    user=new User(new QTcpSocket(this));
+    connect(user->getSocket(), SIGNAL(connected()), this, SLOT(onConnected()));
+    connect(user->getSocket(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
+    connect(user->getSocket(), SIGNAL(disconnected()), this, SLOT(onDisconnected()));
 }
 
 MainWindow::~MainWindow() {
@@ -31,7 +31,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_pbLogin_clicked() {
     /* Проверка ввода адреса */
-    QString serverName = "127.0.0.1";
+    QString serverName = "10.0.2.15"; //server's address
     if (serverName.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
                                  "Enter the server name or address.",
@@ -48,35 +48,37 @@ void MainWindow::on_pbLogin_clicked() {
         return;
     }
 
-    socket->connectToHost(serverName, PORT);
+    user->getSocket()->connectToHost(serverName, PORT);
 }
 
 void MainWindow::on_pbSend_clicked() {
     QString message = ui->leMessage->text().trimmed();
     if (!message.isEmpty()) {
-        QString sNumber = QString::number(this->number);
-        socket->write(QString(sNumber + ":" + "/say:" + message + "\n").toUtf8());
+        QString sNumber = QString::number(user->getRoomNumber());
+        user->getSocket()->write(QString(sNumber + ":" + "/say:" + message + "\n").toUtf8());
         ui->leMessage->clear();
         ui->leMessage->setFocus();
     }
 }
 
 void MainWindow::onReadyRead() {
-    QRegExp numberRex("^(.*):([0-9])$");
+    QRegExp numberRex("^(.*):([0-9])$"); //client'snumber
     QRegExp usersRex("^/users:(.*)$");
     QRegExp systemRex("^/system:(.*)$");
     QRegExp messageRex("^(.*):(.*):(.*)$");
 
-    while (socket->canReadLine()) {
+    while (user->getSocket()->canReadLine()) {
 
-        QString line = QString::fromUtf8(socket->readLine()).trimmed();
+        //Server's sendToAll(QString(number + ":" + tmp + "\n"));
+        QString line = QString::fromUtf8(user->getSocket()->readLine()).trimmed();
         QString sNumber;
-        qDebug() << "클라이언트 테스트: " << line;
-        if(numberRex.indexIn(line) != -1){ //클라이언트에 번호 부여
+        if(numberRex.indexIn(line) != -1)
+        { //클라이언트에 번호 부여
             sNumber = numberRex.cap(2);
-            if(this->number == 0){
-                this->number = sNumber.toInt();
-                qDebug() << "클라이언트 테스트222"<< this->number;
+            if(user->getRoomNumber() == 0) //set client's room number;
+            {
+                user->setRoomNumber(sNumber.toInt());
+
             }
         }
         else if (usersRex.indexIn(line) != -1) {
@@ -94,7 +96,7 @@ void MainWindow::onReadyRead() {
         // Если сообщение - от пользователя
         else if (messageRex.indexIn(line) != -1) {
             QString curNumber = messageRex.cap(1);
-            if(number == curNumber.toInt()){
+            if(user->getRoomNumber() == curNumber.toInt()){
                 qDebug() << "숫자 변환 테스트: " <<sNumber.toInt();
                 QString user = messageRex.cap(2);
                 QString message = messageRex.cap(3);
@@ -108,7 +110,7 @@ void MainWindow::onConnected() {
     ui->teChat->clear();
 
     ui->stackedWidget->setCurrentWidget(ui->chatPage);
-    socket->write(QString("/login:" + ui->leName->text() + "\n").toUtf8());
+    user->getSocket()->write(QString("/login:" + ui->leName->text() + "\n").toUtf8());
     ui->leMessage->setFocus();
 }
 
