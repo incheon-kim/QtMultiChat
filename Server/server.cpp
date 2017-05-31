@@ -15,25 +15,24 @@ Server::Server(QObject* parent) : QObject(parent) {
     }
 }
 
-/* Отправить всем обновленный список пользователей */
+
 void Server::sendUserList()
 {
     QString line = "/users:" + clients.values().join(',') + "\n";
     sendToAll(line);
 }
 
-/* Отправить сообщение всем пользователям */
+
 void Server::sendToAll(const QString& msg) {
     foreach (QTcpSocket* socket, clients.keys()) {
         socket->write(msg.toUtf8());
     }
 }
 
-/* Слот, который вызывается, когда к серверу подключается
- * новый клиент */
+
 void Server::onNewConnection() {
     QTcpSocket* socket = server->nextPendingConnection();
-    QString number; //????????
+    QString number;
     if(room[room_Pointer] <= 1)//room not full
     {
         ++room[room_Pointer];
@@ -52,7 +51,7 @@ void Server::onNewConnection() {
     sendToAll(QString(number + ":" + setClientRoomNumber + "\n")); //send to connected client
 }
 
-/* Слот, вызываемый при отключении клиента */
+
 void Server::onDisconnect() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     qDebug() << "Client disconnected: " << socket->peerAddress().toString();
@@ -63,14 +62,14 @@ void Server::onDisconnect() {
     sendUserList();
 }
 
-/* Прием данных от клиента */
+
 void Server::onReadyRead() {
     QRegExp loginRex("^/login:(.*)$");
     QRegExp messageRex("^(.*):/say:(.*)$");
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
-        /* Сообщение - пользователь логинится */
+
         if (loginRex.indexIn(line) != -1) {
             QString user = loginRex.cap(1);
             clients[socket] = user;
@@ -78,7 +77,7 @@ void Server::onReadyRead() {
             sendUserList();
             qDebug() << user << "logged in.";
         }
-        /* Сообщение в чат */
+
         else if (messageRex.indexIn(line) != -1) {
             QString user = clients.value(socket);
             QString num = messageRex.cap(1);
@@ -88,7 +87,7 @@ void Server::onReadyRead() {
             qDebug() << "User:" << user;
             qDebug() << "Message:" << msg;
         }
-        /* Некорректное сообщение от клиента */
+
         else {
             qDebug() << "Bad message from " << socket->peerAddress().toString();
         }

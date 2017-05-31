@@ -4,8 +4,7 @@
 #include <QMessageBox>
 #include <QListWidgetItem>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
+MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -14,8 +13,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->leName, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
     connect(ui->leMessage, SIGNAL(returnPressed()), this, SLOT(on_pbSend_clicked()));
 
-    /* Имя пользователя должно содержать только латинские буквы,
-     * цифры и символы подчеркивания и начинаться только с букв */
     QRegExp regex("^[a-zA-Z]\\w+");
     ui->leName->setValidator(new QRegExpValidator(regex, this));
 
@@ -30,7 +27,7 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_pbLogin_clicked() {
-    /* Проверка ввода адреса */
+
     QString serverName = "10.0.2.15"; //server's address
     if (serverName.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
@@ -39,7 +36,7 @@ void MainWindow::on_pbLogin_clicked() {
         return;
     }
 
-    /* Проверка ввода имени пользователя */
+
     QString userName = ui->leName->text().trimmed();
     if (userName.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
@@ -88,12 +85,12 @@ void MainWindow::onReadyRead() {
                 new QListWidgetItem(QIcon(":/user.png"), user, ui->lwUsers);
             }
         }
-        // Системное сообщение
+
         else if (systemRex.indexIn(line) != -1) {
             QString msg = systemRex.cap(1);
             ui->teChat->append("<p color=\"gray\">" + msg + "</p>\n");
         }
-        // Если сообщение - от пользователя
+
         else if (messageRex.indexIn(line) != -1) {
             QString curNumber = messageRex.cap(1);
             if(user->getRoomNumber() == curNumber.toInt()){
