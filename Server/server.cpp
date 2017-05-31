@@ -71,21 +71,24 @@ void Server::onDisconnect() {
 
 
 void Server::onReadyRead() {
-
+    qDebug()<<"dshkds";
     QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
-    QRegExp tokRex("^/email:(.*)/Token:(.*)&");
+    QRegExp tokRex("^/email:(.*)/Token:(.*)$");
     QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
     QRegExp messageRex("^/say:(.*)$");
     QSqlQuery query;
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
-
+        qDebug() << line<<endl;
         if (loginRex.indexIn(line) != -1) { //login
             QString userID = loginRex.cap(1);
+            qDebug() << userID<<endl;
             QString userEnPW = loginRex.cap(2);
+            qDebug() << userEnPW <<endl;
             QString userPW = crypto.decryptToString(userEnPW);
-
+            qDebug() << userPW<<endl;
+            qDebug()<<userID+userPW;
 
             if(query.exec("SELECT ID,PW FROM info WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'")){
                 if(query.next()){
@@ -95,7 +98,9 @@ void Server::onReadyRead() {
                 qDebug() << userID << "logged in.";
                 }
 
-                else return; //로그인 승인불가!
+                else{
+                    qDebug()<<"login fail";
+                    return; }     //로그인 승인불가!
             }
 
 

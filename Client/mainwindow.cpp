@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(socket, SIGNAL(connected()), this, SLOT(onConnected()));
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+
 }
 
 MainWindow::~MainWindow() {
@@ -33,7 +34,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_pbLogin_clicked() {
 
-
+     socket->connectToHost("127.0.0.1",1234);
 
     QString userName = ui->leID->text().trimmed();
     if (userName.isEmpty()) {
@@ -55,8 +56,8 @@ void MainWindow::on_pbLogin_clicked() {
     crypto.setKey(0x0c2ad4a4acb9f023);
     QString cpw=crypto.encryptToString(userPW);
 
-socket->write(QString("/userID:"+userName+"/userPW"+cpw).toUtf8());
-socket->waitForBytesWritten(10);
+socket->write(QString("/userID:"+userName+"/userPW:"+cpw+"\n").toUtf8());
+
 
 }
 
@@ -103,14 +104,14 @@ void MainWindow::onConnected() {
     ui->teChat->clear();
 
     ui->stackedWidget->setCurrentWidget(ui->chatPage);
-    socket->write(QString("/login:" + ui->leID->text() + "\n").toUtf8());
+    //socket->write(QString("/login:" + ui->leID->text() + "\n").toUtf8());
     ui->leMessage->setFocus();
 }
 
 void MainWindow::onDisconnected() {
     QMessageBox::warning(NULL, "Warning",
-                         "You have been disconnected from the server", QMessageBox::Ok);
-    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+                        "You have been disconnected from the server", QMessageBox::Ok);
+  ui->stackedWidget->setCurrentWidget(ui->loginPage);
 }
 
 
@@ -123,3 +124,5 @@ void MainWindow::on_pbSignup_clicked()
     form.setModal(true);
     form.exec();
 }
+
+
