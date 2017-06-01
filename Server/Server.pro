@@ -12,8 +12,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     server.cpp \
-    simplecrypt.cpp
+    roommanager.cpp \
+    room.cpp \
+    simplecrypte.cpp
 
 HEADERS += \
     server.h \
-    simplecrypt.h
+    roommanager.h \
+    room.h \
+    simplecrypte.h

@@ -7,13 +7,16 @@
 #include <QString>
 #include <QStringList>
 #include <QMap>
-#include "simplecrypt.h"
+#include <QVector>
+#include "roommanager.h"
+#include "room.h"
 #include <QtSql/QSqlDatabase>
 #include <QtDebug>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QFileInfo>
-
+#include "server.h"
+#include "simplecrypt.h"
 #define PORT 1234
 
 
@@ -31,10 +34,12 @@ public slots:
 private:
     QTcpServer* server;
     QMap<QTcpSocket*,QString> clients;
-    SimpleCrypt crypto;
+    int room[10] = {0};
+    int room_Pointer = 1;
+    int room_Current = 0; //allocated room
+    //Roommanager *manager;
     QSqlDatabase myDB;
+    SimpleCrypt crypto;
 };
-
-
 
 #endif // SERVER_H

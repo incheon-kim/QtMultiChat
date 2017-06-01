@@ -1,9 +1,7 @@
 #include "server.h"
 #include <QString>
 #include <QRegExp>
-#include <QtCore/QCoreApplication>
-#define Path_to_DB "/home/kim/db/dongdongju.db"
-
+#define Path_to_DB "/home/kim/db/dongdongju.db"  //db path
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -28,13 +26,15 @@ Server::Server(QObject* parent) : QObject(parent) {
     else{
         qDebug()<<"[!]DB error: file not exist";
     }
-}
 
+}
 
 Server::~Server(){
     myDB.close();
+
 }
-void Server::sendUserList() {
+void Server::sendUserList()
+{
     QString line = "/users:" + clients.values().join(',') + "\n";
     sendToAll(line);
 }
@@ -49,13 +49,23 @@ void Server::sendToAll(const QString& msg) {
 
 void Server::onNewConnection() {
     QTcpSocket* socket = server->nextPendingConnection();
-    qDebug() << "Client connected: " << socket->peerAddress().toString();
+    QString number;
+    if(room[room_Pointer] <= 1)//room not full
+    {
+        ++room[room_Pointer];
+        number = "number";
+    }
+    else //room full (need to modify later)
+    {
+        ++room[++room_Pointer];
+    }
 
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
-
-
+    // оставим клиента безымянным пока он не залогинится
     clients.insert(socket, "");
+    QString setClientRoomNumber = QString::number(room_Pointer); //tmp is client's room_no
+    sendToAll(QString(number + ":" + setClientRoomNumber + "\n")); //send to connected client
 }
 
 
@@ -71,7 +81,6 @@ void Server::onDisconnect() {
 
 
 void Server::onReadyRead() {
-    qDebug()<<"dshkds";
     QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
     QRegExp tokRex("^/email:(.*)/Token:(.*)$");
     QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
@@ -80,15 +89,13 @@ void Server::onReadyRead() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
-        qDebug() << line<<endl;
-        if (loginRex.indexIn(line) != -1) { //login
+
+        if (loginRex.indexIn(line) != -1) {
             QString userID = loginRex.cap(1);
-            qDebug() << userID<<endl;
+
             QString userEnPW = loginRex.cap(2);
-            qDebug() << userEnPW <<endl;
+
             QString userPW = crypto.decryptToString(userEnPW);
-            qDebug() << userPW<<endl;
-            qDebug()<<userID+userPW;
 
             if(query.exec("SELECT ID,PW FROM info WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'")){
                 if(query.next()){
@@ -103,18 +110,18 @@ void Server::onReadyRead() {
                     return; }     //로그인 승인불가!
             }
 
-
-
         }
 
-
-        else if (messageRex.indexIn(line) != -1) {//메세지 보내기
+        else if (messageRex.indexIn(line) != -1) {
             QString user = clients.value(socket);
-            QString msg = messageRex.cap(1);
-            sendToAll(QString(user + ":" + msg + "\n"));
+            QString num = messageRex.cap(1);
+            qDebug() << "넘버링 테스트: "<<num;
+            QString msg = messageRex.cap(2);
+            sendToAll(QString(num + ":" + user + ":" + msg + "\n"));
             qDebug() << "User:" << user;
             qDebug() << "Message:" << msg;
         }
+
 
         else if(signupRex.indexIn(line)!=-1){ //회원가입
             QString id=signupRex.cap(1);
@@ -137,9 +144,9 @@ void Server::onReadyRead() {
 
 
         }
+        else {
+            qDebug() << "Bad message from " << socket->peerAddress().toString();
+        }
     }
-
-
 }
-
 
