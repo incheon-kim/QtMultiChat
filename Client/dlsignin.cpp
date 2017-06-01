@@ -11,6 +11,7 @@ dlsignin::dlsignin(QWidget *parent) :
     ui(new Ui::dlsignin)
 {
     ui->setupUi(this);
+    socket->connectToHost("127.0.0.1",1234);
 }
 
 dlsignin::~dlsignin()
@@ -73,7 +74,7 @@ void dlsignin::on_pbSignupform_clicked()
     else if(ui->Male->isChecked())
             ugender=0;
 
-    socket->write(QString("/makeID:"+ makeid +"/makepw:"+enpw+"/makeemail:"+makeEmail+"/makegender:"+ugender).toUtf8());
+    socket->write(QString("/makeID:"+ makeid +"/makepw:"+enpw+"/makeemail:"+makeEmail+"/makegender:"+ugender+"\n").toUtf8());
 }
 
 void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
@@ -120,5 +121,15 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
             userToken += userEmail[i];
         }
     }
-    socket->write(QString("/email:"+userEmail+"/Token:"+userToken ).toUtf8());
+    socket->write(QString("/email:"+userEmail+"/Token:"+userToken+"\n" ).toUtf8());
+}
+
+void dlsignin::setSocket(QTcpSocket *socket){
+    this->socket = socket;
+}
+
+void dlsignin::onConnected(){}
+
+void dlsignin::onDisconnected(){
+
 }

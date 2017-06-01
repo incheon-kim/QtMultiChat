@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "dlsignin.h"
 #include <QRegExp>
 #include <QMessageBox>
 #include <QListWidgetItem>
@@ -24,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(socket, SIGNAL(connected()), this, SLOT(onConnected()));
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
+    socket->connectToHost("127.0.0.1",1234);
 
 }
 
@@ -34,7 +34,7 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_pbLogin_clicked() {
 
-     socket->connectToHost("127.0.0.1",1234);
+
 
     QString userName = ui->leID->text().trimmed();
     if (userName.isEmpty()) {
@@ -101,17 +101,23 @@ void MainWindow::onReadyRead() {
 }
 
 void MainWindow::onConnected() {
+
+    /*
+    //login
     ui->teChat->clear();
 
     ui->stackedWidget->setCurrentWidget(ui->chatPage);
     //socket->write(QString("/login:" + ui->leID->text() + "\n").toUtf8());
     ui->leMessage->setFocus();
+
+    *///login fail
 }
 
 void MainWindow::onDisconnected() {
     QMessageBox::warning(NULL, "Warning",
-                        "You have been disconnected from the server", QMessageBox::Ok);
+                        "check ID or PW", QMessageBox::Ok);
   ui->stackedWidget->setCurrentWidget(ui->loginPage);
+  socket->connectToHost("127.0.0.1",1234);
 }
 
 
@@ -121,6 +127,7 @@ void MainWindow::on_pbSignup_clicked()
 {
 
     dlsignin form;
+    form.setSocket(socket);
     form.setModal(true);
     form.exec();
 }

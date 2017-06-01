@@ -1,7 +1,7 @@
 #include "server.h"
 #include <QString>
 #include <QRegExp>
-#define Path_to_DB "/home/kim/db/dongdongju.db"  //db path
+#define Path_to_DB "/home/kim/db/ddj.db"  //db path
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -97,7 +97,7 @@ void Server::onReadyRead() {
 
             QString userPW = crypto.decryptToString(userEnPW);
 
-            if(query.exec("SELECT ID,PW FROM info WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'")){
+            if(query.exec("SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'")){
                 if(query.next()){
                 clients[socket] = userID;
                 sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
@@ -107,19 +107,19 @@ void Server::onReadyRead() {
 
                 else{
                     qDebug()<<"login fail";
-                    return; }     //로그인 승인불가!
+                    socket->disconnectFromHost();
+                }     //로그인 승인불가!
             }
 
         }
 
         else if (messageRex.indexIn(line) != -1) {
             QString user = clients.value(socket);
-            QString num = messageRex.cap(1);
-            qDebug() << "넘버링 테스트: "<<num;
-            QString msg = messageRex.cap(2);
-            sendToAll(QString(num + ":" + user + ":" + msg + "\n"));
-            qDebug() << "User:" << user;
-            qDebug() << "Message:" << msg;
+            QString msg = messageRex.cap(1);
+            //qDebug() << "넘버링 테스트: "<<num;
+            //QString msg = messageRex.cap(2);
+            sendToAll(QString( user + ":" + msg + "\n"));
+            qDebug() << "User:" << user<< "Message:" << msg;
         }
 
 
@@ -130,8 +130,11 @@ void Server::onReadyRead() {
             QString email=signupRex.cap(3);
             QString gender=signupRex.cap(4);
             QString Token=signupRex.cap(5);
-            if(query.exec("INSERT INTO info VALUES(\'"+id+"\',\'"+dcpw+"\',\'"+email+"\',\'"+gender+"\',1")){
+            if(query.exec("INSERT INTO usrInfo VALUES(\'"+id+"\',\'"+dcpw+"\',\'"+gender+"\',\'"+"\',1")){
+                if(query.exec("INSERT INTO usrE VALUES(\'"+id+"\',\'"+email+"\'"))
+                    if(query.next()){
                  qDebug() << id << "signed up!.";
+
             }
             else
                  qDebug() << id << "error,cannot sign up";
@@ -149,4 +152,4 @@ void Server::onReadyRead() {
         }
     }
 }
-
+}
