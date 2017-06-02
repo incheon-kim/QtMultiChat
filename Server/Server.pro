@@ -1,7 +1,7 @@
 QT += core
 QT += network
 QT -= gui
-
+QT += sql
 CONFIG += c++11
 
 TARGET = Server
@@ -13,9 +13,11 @@ TEMPLATE = app
 SOURCES += main.cpp \
     server.cpp \
     roommanager.cpp \
-    room.cpp
+    room.cpp \
+    simplecrypte.cpp
 
 HEADERS += \
     server.h \
     roommanager.h \
-    room.h
+    room.h \
+    simplecrypte.h
