@@ -24,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     socket->connectToHost("127.0.0.1",1234);
-
 }
 
 MainWindow::~MainWindow() {
@@ -57,7 +56,23 @@ void MainWindow::on_pbLogin_clicked() {
     QString cpw=crypto.encryptToString(userPW);
 
 socket->write(QString("/userID:"+userName+"/userPW:"+cpw+"\n").toUtf8());
+QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
 
+//login
+if(socket->canReadLine()){
+        QString line = QString::fromUtf8(socket->readLine()).trimmed();
+        if(loginAcceptRex.indexIn(line)!=-1){
+            QString loginA=loginAcceptRex.cap(1);
+            if(loginA==(ui->leID->text().trimmed())){
+        ui->teChat->clear();
+
+        ui->stackedWidget->setCurrentWidget(ui->chatPage);
+        //socket->write(QString("/login:" + ui->leID->text() + "\n").toUtf8());
+        ui->leMessage->setFocus();
+            }
+
+}
+}
 
 }
 
@@ -102,16 +117,10 @@ void MainWindow::onReadyRead() {
 
 void MainWindow::onConnected() {
 
-    /*
-    //login
-    ui->teChat->clear();
-
-    ui->stackedWidget->setCurrentWidget(ui->chatPage);
-    //socket->write(QString("/login:" + ui->leID->text() + "\n").toUtf8());
-    ui->leMessage->setFocus();
-
-    *///login fail
 }
+
+
+    //login fail
 
 void MainWindow::onDisconnected() {
     QMessageBox::warning(NULL, "Warning",

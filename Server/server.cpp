@@ -1,7 +1,7 @@
 #include "server.h"
 #include <QString>
 #include <QRegExp>
-#define Path_to_DB "/home/kim/db/ddj.db"  //db path
+#define Path_to_DB "/home/kim/git/QtMultiChat/db/ddj.db"  //db path
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -103,6 +103,7 @@ void Server::onReadyRead() {
                 sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                 sendUserList();
                 qDebug() << userID << "logged in.";
+                sendToAll(QString("/LoginSuccess:"+userID+"\n"));
                 }
 
                 else{
