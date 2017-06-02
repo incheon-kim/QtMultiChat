@@ -7,6 +7,7 @@ class Room
 public:
     Room();
    int getNumOfPeople();
+   void enter();
 private:
     int numOfPeople;
 };

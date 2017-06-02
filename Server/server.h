@@ -27,10 +27,10 @@ public slots:
 private:
     QTcpServer* server;
     QMap<QTcpSocket*,QString> clients;
-    int room[10] = {0};
-    int room_Pointer = 1;
-    int room_Current = 0; //allocated room
-    //Roommanager *manager;
+    //int room[10] = {0};
+    //int room_Pointer = 1;
+    //int room_Current = 0; //allocated room
+    Roommanager *manager;
 };
 
 #endif // SERVER_H

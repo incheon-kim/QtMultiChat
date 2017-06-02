@@ -7,8 +7,11 @@ class Roommanager
 {
 public:
     Roommanager();
-    void getRoom(QVector<Room>::iterator iter);
-    void createRoom();
+    Room  getLastRoom();
+    void createRoom(Room newRoom);
+    QVector<Room>::iterator returnIteratorBegin();
+    QVector<Room>::iterator returnIteratorEnd();
+    bool emptyRooms();
 private:
    QVector<Room> roomList;
 };
