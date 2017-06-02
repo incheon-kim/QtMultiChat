@@ -6,10 +6,10 @@ class Room
 {
 public:
     Room();
-   int getNumOfPeople();
-   void enter();
+    void enter();
+    int getPeople();
 private:
-    int numOfPeople;
+    int numPeople;
 };
 
 #endif // ROOM_H

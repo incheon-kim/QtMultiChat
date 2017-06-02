@@ -4,7 +4,7 @@
 
 Server::Server(QObject* parent) : QObject(parent) {
     server = new QTcpServer(this);
-    manager=new Roommanager();
+    manager=new RoomManager();
     connect(server, SIGNAL(newConnection()),
             this,   SLOT(onNewConnection()));
 
@@ -33,52 +33,45 @@ void Server::sendToAll(const QString& msg) {
 void Server::onNewConnection() {
     QTcpSocket* socket = server->nextPendingConnection();
     QString number;
+    int roomNumber=1;
     bool enter=false;
-    int room_number=1;
-    QVector<Room>::iterator iter;
-    if(!manager->emptyRooms())
+     QVector<Room>::iterator iter;
+
+    if(!manager->isEmpty())
     {
-        qDebug()<<"not empty";
-        for(iter =manager->returnIteratorBegin();iter!=manager->returnIteratorEnd();++iter)
+
+        for(iter=manager->beginIterator();iter!=manager->endItertor();++iter)
         {
-        qDebug()<<"test";
-        qDebug()<<"getNumber"<<(*iter).getNumOfPeople();
-            if((*iter).getNumOfPeople()<1)
+            if((*iter).getPeople()<2)
             {
-            (*iter).enter();
-            number="number";
-            enter=true;
-            break;
+                (*iter).enter();
+                number="number";
+                enter=true;
+                qDebug()<<"roomPeople"<<(*iter).getPeople();
+                qDebug()<<"roomNumber"<<roomNumber;
+                break;
             }
-        room_number++;
+            roomNumber++;
         }
     }
 
-    qDebug()<<"roomnumber"<<room_number;
     if(enter==false)
     {
-        Room newRoom;
-       manager->createRoom(newRoom);
-        Room createRoom =manager->getLastRoom();
-        createRoom.enter();
+
+        manager->createRoom();
+        QVector<Room>::iterator getRoom= manager->lastIter();
+        (*getRoom).enter();
+        qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+        qDebug()<<"enterRoom"<<roomNumber;
     }
-    /*
-    if(room[room_Pointer] <= 1)//room not full
-    {
-        ++room[room_Pointer];
-        number = "number";
-    }
-    else //room full (need to modify later)
-    {
-        ++room[++room_Pointer];
-    }
-    */
+
 
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
     clients.insert(socket, "");
-    QString setClientRoomNumber = QString::number(room_number);
-    //QString setClientRoomNumber = QString::number(room_Pointer); //tmp is client's room_no
+
+
+    QString setClientRoomNumber = QString::number(roomNumber);
     sendToAll(QString(number + ":" + setClientRoomNumber + "\n")); //send to connected client
 }
 

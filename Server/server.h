@@ -12,7 +12,7 @@
 #include "room.h"
 
 #define PORT 1234
-
+class RoomManager;
 
 class Server : QObject {
     Q_OBJECT
@@ -22,15 +22,12 @@ public:
     void sendToAll(const QString&);
 public slots:
     void onNewConnection();
-    void onDisconnect();
+   void onDisconnect();
     void onReadyRead();
 private:
     QTcpServer* server;
     QMap<QTcpSocket*,QString> clients;
-    //int room[10] = {0};
-    //int room_Pointer = 1;
-    //int room_Current = 0; //allocated room
-    Roommanager *manager;
+    RoomManager* manager;
 };
 
 #endif // SERVER_H

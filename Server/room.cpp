@@ -1,18 +1,15 @@
 #include "room.h"
-#include <QDebug>
+
 Room::Room()
 {
-    numOfPeople=0;
-}
-
-int Room::getNumOfPeople()
-{
-    return numOfPeople;
+    numPeople=0;
 }
 
 void Room::enter()
 {
-    qDebug()<<"beforeenter"<<numOfPeople;
-    numOfPeople++;
-    qDebug()<<"new enter"<<numOfPeople;
+    ++numPeople;
+}
+int Room::getPeople()
+{
+    return numPeople;
 }
