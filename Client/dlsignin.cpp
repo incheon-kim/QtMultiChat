@@ -12,6 +12,7 @@ dlsignin::dlsignin(QWidget *parent) :
 {
     ui->setupUi(this);
     socket->connectToHost("127.0.0.1",1234);
+
 }
 
 dlsignin::~dlsignin()
@@ -122,14 +123,18 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
         }
     }
     socket->write(QString("/email:"+userEmail+"/Token:"+userToken+"\n" ).toUtf8());
+    qDebug()<<"data send to server";
 }
 
 void dlsignin::setSocket(QTcpSocket *socket){
     this->socket = socket;
 }
 
-void dlsignin::onConnected(){}
+void dlsignin::onConnected(){
+    qDebug()<<"signupform connected!";
+
+}
 
 void dlsignin::onDisconnected(){
-
+    socket->close();
 }

@@ -5,6 +5,8 @@
 #include <QListWidgetItem>
 #include <QTcpSocket>
 #include "simplecrypt.h"
+#include <QString>
+QString userID;
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -42,6 +44,7 @@ void MainWindow::on_pbLogin_clicked() {
                                  QMessageBox::Ok);
         return;
     }
+    userID=userName;
 
 
     QString userPW = ui->lePW->text().trimmed();
@@ -56,23 +59,8 @@ void MainWindow::on_pbLogin_clicked() {
     QString cpw=crypto.encryptToString(userPW);
 
 socket->write(QString("/userID:"+userName+"/userPW:"+cpw+"\n").toUtf8());
-QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
+qDebug()<<"here"<<endl;
 
-//login
-if(socket->canReadLine()){
-        QString line = QString::fromUtf8(socket->readLine()).trimmed();
-        if(loginAcceptRex.indexIn(line)!=-1){
-            QString loginA=loginAcceptRex.cap(1);
-            if(loginA==(ui->leID->text().trimmed())){
-        ui->teChat->clear();
-
-        ui->stackedWidget->setCurrentWidget(ui->chatPage);
-        //socket->write(QString("/login:" + ui->leID->text() + "\n").toUtf8());
-        ui->leMessage->setFocus();
-            }
-
-}
-}
 
 }
 
@@ -86,10 +74,14 @@ void MainWindow::on_pbSend_clicked() {
 }
 
 void MainWindow::onReadyRead() {
+    qDebug()<<"readyreadon";
     QRegExp usersRex("^/users:(.*)$");
     QRegExp systemRex("^/system:(.*)$");
     QRegExp messageRex("^(.*):(.*)$");
+    QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
+
     while (socket->canReadLine()) {
+        qDebug()<<"readyreadon1";
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
 
         if (usersRex.indexIn(line) != -1) {
@@ -101,7 +93,6 @@ void MainWindow::onReadyRead() {
 
             }
 
-
         else if (systemRex.indexIn(line) != -1) {
             QString msg = systemRex.cap(1);
             ui->teChat->append("<p color=\"gray\">" + msg + "</p>\n");
@@ -112,6 +103,20 @@ void MainWindow::onReadyRead() {
             QString message = messageRex.cap(2);
             ui->teChat->append("<p><b>" + user + "</b>: " + message + "</p>\n");
         }
+
+        if(loginAcceptRex.indexIn(line)!=-1){
+        qDebug()<<"here2"<<endl;
+            QString loginA=loginAcceptRex.cap(1);
+
+            if(!userID.compare(loginA)){
+                qDebug()<<"here3"<<endl;
+                 ui->teChat->clear();
+                 ui->stackedWidget->setCurrentWidget(ui->chatPage);
+                 ui->leMessage->setFocus();
+            }
+
+    }
+
     }
 }
 
