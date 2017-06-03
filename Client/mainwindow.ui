@@ -95,7 +95,10 @@ QLineEdit {
           <string notr="true"/>
          </property>
          <property name="text">
-          <string>동동주</string>
+          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600; color:#b8d6ff;&quot;&gt;동동주&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+         <property name="textFormat">
+          <enum>Qt::AutoText</enum>
          </property>
          <property name="alignment">
           <set>Qt::AlignCenter</set>
