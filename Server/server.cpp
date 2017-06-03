@@ -79,26 +79,23 @@ void Server::onDisconnect() {
     sendUserList();
 }
 
-
+//  /makegender:([0-1])
 void Server::onReadyRead() {
-    QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
+    QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)$");
     QRegExp tokRex("^/email:(.*)/Token:(.*)$");
     QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
     QRegExp messageRex("^/say:(.*)$");
-    QSqlQuery query;
+    QSqlQuery q(myDB);
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
-
         if (loginRex.indexIn(line) != -1) {
             QString userID = loginRex.cap(1);
-
             QString userEnPW = loginRex.cap(2);
-
             QString userPW = crypto.decryptToString(userEnPW);
-
-            if(query.exec("SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'")){
-                if(query.next()){
+            QString query="SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'";
+            if(q.exec(query)){
+                if(q.next()){
                 clients[socket] = userID;
                 sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                 sendUserList();
@@ -115,7 +112,7 @@ void Server::onReadyRead() {
 
         }
 
-        if (messageRex.indexIn(line) != -1) {
+        else if (messageRex.indexIn(line) != -1) {
             QString user = clients.value(socket);
             QString msg = messageRex.cap(1);
             //qDebug() << "넘버링 테스트: "<<num;
@@ -126,31 +123,47 @@ void Server::onReadyRead() {
 
 
         if(signupRex.indexIn(line)!=-1){ //회원가입
+            qDebug()<<"enterd signupRex";
             QString id=signupRex.cap(1);
             QString enpw=signupRex.cap(2);
             QString dcpw=crypto.decryptToString(enpw);
             QString email=signupRex.cap(3);
-            QString gender=signupRex.cap(4);
-            QString Token=signupRex.cap(5);
+            int gender =0; //change! test use
+            QString gen = QString::number(gender);
+            //int gender=signupRex.cap(4).toInt();
+          //  QString Token=signupRex.cap(5);
+            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES('"+id+"','"+dcpw+"',"+gen+",1)";
+            QString query2="INSERT INTO usrE (ID,Email) VALUES('"+id+"','"+email+"')";
+            q.prepare(query);
             qDebug()<<"signupform data came to server";
-            if(query.exec("INSERT INTO usrInfo VALUES(\'"+id+"\',\'"+dcpw+"\',\'"+gender+"\',\'"+"\',1")){
-                if(query.exec("INSERT INTO usrE VALUES(\'"+id+"\',\'"+email+"\'"))
-                    if(query.next()){
-                 qDebug() << id << "signed up!.";
+            if(q.exec(query)==true){
+                qDebug()<<"q1 ok";
+                    q.prepare(query2);
+                    if(q.exec(query2)==true){
 
+                             qDebug() << id << "signed up!.";
+                  }
+                    else{
+                        qDebug()<<q.lastError();
+                    }
+                }
+            else{
+                qDebug()<<q.lastError();
             }
-            else
-                 qDebug() << id << "error,cannot sign up";
-        }
+            }
 
-        if(tokRex.indexIn(line)!=-1){
+
+
+
+
+
+
+       else if(tokRex.indexIn(line)!=-1){
             QString userEmail=tokRex.cap(1); //이메일인증 버튼을 누른 클라이언트의 이메일주소
             QString Token=tokRex.cap(2); // 클라이언트의 이메일로 전송할 토큰값.
             //클라이언트 이메일로 토큰 전송하는 과정 시작.
-
-
         }
 
-    }
-}
+
+                }
 }
