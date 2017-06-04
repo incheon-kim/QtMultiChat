@@ -2,11 +2,42 @@
 
 Room::Room()
 {
-    numOfPeople=0;
+   //female=false;
+   // male=fale;
+    numPeople=0;
+}
+
+void Room::enter()
+{
+    ++numPeople;
+}
+int Room::getPeople()
+{
+    return numPeople;
+}
+void Room::out()
+{
+    --numPeople;
 }
 /*
-int Room::getNumOfPeople()
+bool Room::getFemale()
 {
-    return numOfPeople;
+    if(female==true)
+        return true;
+    else
+        return false;
 }
-*/
+bool Room::getMale()
+{
+    if(male==true)
+        return true;
+    else return false;
+}
+void Room::enterFemale()
+{
+    female=true;
+}
+void Room::enterMale()
+{
+    male=true;
+}*/

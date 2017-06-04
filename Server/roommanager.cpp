@@ -1,15 +1,42 @@
 #include "roommanager.h"
 
-Roommanager::Roommanager()
+RoomManager::RoomManager()
 {
-}
-/*void Roommanager::createRoom(Room newRoom)
-{
-   roomList.append(newRoom);
+    //disconnect=false;
+
 }
 
- Room Roommanager::getRoom(QVector<Room>::iterator iter)
- {
-     return roomList[iter];
- }
-*/
+bool RoomManager::isEmpty()
+{
+    if(roomList.empty())
+        return true;
+    else
+        return false;
+}
+
+void RoomManager::createRoom()
+{
+    Room newRoom;
+    roomList.push_back(newRoom);
+}
+
+QVector<Room>::iterator RoomManager::lastIter()
+{
+    QVector<Room>::iterator iter = roomList.end();
+    --iter;
+    return iter;
+}
+
+QVector<Room>::iterator RoomManager::beginIterator()
+{
+    return roomList.begin();
+}
+QVector<Room>::iterator RoomManager::endItertor()
+{
+    return roomList.end();
+}
+/*
+void RoomManager::setDisconnect()
+{
+    disconnect=true;
+}*/

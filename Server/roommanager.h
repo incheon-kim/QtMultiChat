@@ -3,14 +3,20 @@
 #include <QVector>
 #include "room.h"
 class Room;
-class Roommanager
+class RoomManager
 {
 public:
-    Roommanager();
-    void getRoom(QVector<Room>::iterator iter);
+    RoomManager();
     void createRoom();
+    //void setDisconnect();
+    bool isEmpty();
+    QVector<Room>::iterator lastIter();
+    QVector<Room>::iterator beginIterator();
+    QVector<Room>::iterator endItertor();
+
 private:
-   QVector<Room> roomList;
+    QVector<Room> roomList;
+    //bool disconnect;
 };
 
 #endif // ROOMMANAGER_H

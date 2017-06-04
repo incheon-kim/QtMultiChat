@@ -6,9 +6,19 @@ class Room
 {
 public:
     Room();
-   int getNumOfPeople();
+    void enter();
+    void out();
+    int getPeople();
+    /*
+    bool getFemale();
+    bool getMale();
+    void enterFemale();
+    void enterMale();
+    */
 private:
-    int numOfPeople;
+    int numPeople;
+   // bool male;
+   // bool female;
 };
 
 #endif // ROOM_H

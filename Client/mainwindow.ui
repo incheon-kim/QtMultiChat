@@ -75,6 +75,9 @@ QLineEdit {
 	border-radius: 2px;
 }</string>
   </property>
+  <property name="animated">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -402,22 +405,5 @@ selection-color: rgb(255, 255, 255);</string>
  <resources>
   <include location="icons.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>lePW</sender>
-   <signal>returnPressed()</signal>
-   <receiver>pbLogin</receiver>
-   <slot>click()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>385</x>
-     <y>332</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>353</x>
-     <y>380</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

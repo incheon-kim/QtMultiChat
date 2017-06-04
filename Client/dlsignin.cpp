@@ -68,7 +68,18 @@ void dlsignin::on_pbSignupform_clicked()
                                  "이메일을 입력해 주세요.",
                                  QMessageBox::Ok);
         return;}
-
+    QString token;
+    QString tokenCheck= ui->leEmail->text().trimmed();
+    for(int i=0; i<makeEmail.size();i++){
+        if(i % 2 == 0 && makeEmail[i] != '@'){
+            token += makeEmail[i];
+        }
+    }
+    if(!token.compare(tokenCheck)){
+        QMessageBox::information(NULL, "Warning",
+                                 "인증번호를 확인해 주세요.",
+                                 QMessageBox::Ok);
+    }
     int ugender=0;
 
     if(ui->Female->isChecked())
@@ -128,7 +139,7 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
         }
     }
     socket->write(QString("/email:"+userEmail+"/Token:"+userToken+"\n" ).toUtf8());
-
+    qDebug()<<"token send to server";
 }
 
 void dlsignin::setSocket(QTcpSocket *socket){

@@ -17,8 +17,17 @@
 #include <QFileInfo>
 #include "server.h"
 #include "simplecrypt.h"
+#include "libsmtp.h"
 #define PORT 1234
 
+typedef struct
+{
+    QString userName ="NONE";
+    int userSex =-1;
+    int roomNumber=-1;
+}userInfo;
+
+//man 0 female 1
 
 class Server : QObject {
     Q_OBJECT
@@ -33,11 +42,8 @@ public slots:
     void onReadyRead();
 private:
     QTcpServer* server;
-    QMap<QTcpSocket*,QString> clients;
-    int room[10] = {0};
-    int room_Pointer = 1;
-    int room_Current = 0; //allocated room
-    //Roommanager *manager;
+    QMap<QTcpSocket*,userInfo> clients;
+    RoomManager *manager;
     QSqlDatabase myDB;
     SimpleCrypt crypto;
 };

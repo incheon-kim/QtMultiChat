@@ -17,12 +17,14 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     dlsignin.cpp \
-    simplecrypt.cpp
+    simplecrypt.cpp \
+    user.cpp
 
 HEADERS  += \
     mainwindow.h \
     dlsignin.h \
-    simplecrypt.h
+    simplecrypt.h \
+    user.h
 
 FORMS    += \
     mainwindow.ui \
