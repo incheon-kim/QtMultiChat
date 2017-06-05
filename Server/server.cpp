@@ -2,7 +2,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QSqlRecord>
-#define Path_to_DB "/home/menukim/git/QtMultiChat/db/ddj.db"  //db path
+#define Path_to_DB "/home/kim/git/QtMultiChat/db/ddj.db"  //db path
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -110,13 +110,16 @@ void Server::onReadyRead() {
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
             QString query="SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'";
-            QString query2="SELECT Gender FROM usrInfo";
+            QString query2="SELECT Gender FROM usrInfo WHERE ID=\'"+userID+"\'";
+
             if(q.exec(query)){
                 if(q.next()){
                     q.exec(query2);
-                    if(q.next()) {
+                    while(q.next()) {
                         QSqlRecord record = q.record();
-                        qDebug() << "gender : " << record.value(1).toInt();
+                        int gender =q.record().indexOf("Gender");
+                        int g = q.value(gender).toInt();
+                        qDebug() << "gender : " << g;
                     }
                 userInfo temp;
                 temp=clients[socket];
