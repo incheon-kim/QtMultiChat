@@ -140,6 +140,9 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
     }
     socket->write(QString("/email:"+userEmail+"/Token:"+userToken+"\n" ).toUtf8());
     qDebug()<<"token send to server";
+    QMessageBox::information(NULL, "Info",
+                             "인증번호 전송완료!\n 이메일을 확인해 주세요!.",
+                             QMessageBox::Ok);
 }
 
 void dlsignin::setSocket(QTcpSocket *socket){

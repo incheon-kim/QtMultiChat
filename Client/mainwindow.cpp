@@ -7,9 +7,7 @@
 #include "simplecrypt.h"
 #include <QString>
 QString userID;
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setCentralWidget(ui->mainFrame);

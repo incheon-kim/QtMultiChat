@@ -93,22 +93,6 @@ QLineEdit {
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-        <widget class="QLabel" name="upperLabel">
-         <property name="styleSheet">
-          <string notr="true"/>
-         </property>
-         <property name="text">
-          <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-weight:600; color:#b8d6ff;&quot;&gt;동동주&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-         </property>
-         <property name="textFormat">
-          <enum>Qt::AutoText</enum>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="styleSheet">
           <string notr="true">
@@ -123,14 +107,34 @@ background-color: rgb(255, 255, 255);</string>
             <layout class="QHBoxLayout" name="horizontalLayout_2">
              <item>
               <widget class="QTextEdit" name="teChat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>300</width>
                  <height>0</height>
                 </size>
                </property>
+               <property name="autoFillBackground">
+                <bool>true</bool>
+               </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true">background-color: rgb(255, 255, 255);
+border-image: url(:/eleballon.jpg);
+</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="tabChangesFocus">
+                <bool>false</bool>
+               </property>
+               <property name="lineWrapMode">
+                <enum>QTextEdit::WidgetWidth</enum>
                </property>
                <property name="readOnly">
                 <bool>true</bool>
@@ -233,7 +237,8 @@ p, li { white-space: pre-wrap; }
              </property>
              <property name="styleSheet">
               <string notr="true">border-color: rgb(255, 255, 255);
-background-color: rgb(184, 214, 255);
+border-color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);
 alternate-background-color: rgb(255, 255, 255);
 selection-color: rgb(255, 255, 255);</string>
              </property>
@@ -251,7 +256,7 @@ selection-color: rgb(255, 255, 255);</string>
                   <item>
                    <widget class="QLabel" name="IDlabel">
                     <property name="styleSheet">
-                     <string notr="true">background-color: rgb(184, 214, 255);</string>
+                     <string notr="true"/>
                     </property>
                     <property name="text">
                      <string>아이디</string>
@@ -261,7 +266,7 @@ selection-color: rgb(255, 255, 255);</string>
                   <item>
                    <widget class="QLabel" name="PWlable">
                     <property name="styleSheet">
-                     <string notr="true">background-color: rgb(184, 214, 255);</string>
+                     <string notr="true">border-color: rgb(0, 0, 0);</string>
                     </property>
                     <property name="text">
                      <string>비밀번호</string>
@@ -319,7 +324,7 @@ selection-color: rgb(255, 255, 255);</string>
                 <item>
                  <widget class="QPushButton" name="pbLogin">
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgb(184, 214, 255);</string>
+                   <string notr="true">border-color: rgb(0, 0, 0);</string>
                   </property>
                   <property name="text">
                    <string>로그인</string>
@@ -329,7 +334,7 @@ selection-color: rgb(255, 255, 255);</string>
                 <item>
                  <widget class="QPushButton" name="pbSignup">
                   <property name="styleSheet">
-                   <string notr="true">background-color: rgb(184, 214, 255);</string>
+                   <string notr="true">border-color: rgb(0, 0, 0);</string>
                   </property>
                   <property name="text">
                    <string>회원가입</string>
@@ -343,6 +348,12 @@ selection-color: rgb(255, 255, 255);</string>
            </item>
            <item row="0" column="0">
             <widget class="QLabel" name="label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="layoutDirection">
               <enum>Qt::LeftToRight</enum>
              </property>
@@ -350,10 +361,10 @@ selection-color: rgb(255, 255, 255);</string>
               <string/>
              </property>
              <property name="pixmap">
-              <pixmap resource="icons.qrc">:/1-03-Authority-Logo.jpg</pixmap>
+              <pixmap resource="icons.qrc">:/drunkenele.jpg</pixmap>
              </property>
              <property name="scaledContents">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
              <property name="alignment">
               <set>Qt::AlignCenter</set>
