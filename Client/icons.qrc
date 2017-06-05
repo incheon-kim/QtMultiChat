@@ -1,5 +1,12 @@
 <RCC>
     <qresource prefix="/">
         <file>user.png</file>
+<<<<<<< HEAD
+=======
+        <file>user1.png</file>
+        <file>1-03-Authority-Logo.jpg</file>
+        <file>drunkenele.jpg</file>
+        <file>eleballon.jpg</file>
+>>>>>>> master
     </qresource>
 </RCC>

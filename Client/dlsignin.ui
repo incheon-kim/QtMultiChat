@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>384</width>
-    <height>462</height>
+    <height>359</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -20,7 +20,8 @@
    <string>SIGN UP</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color: rgb(184, 214, 255);</string>
+   <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);</string>
   </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">

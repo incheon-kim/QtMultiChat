@@ -75,6 +75,9 @@ QLineEdit {
 	border-radius: 2px;
 }</string>
   </property>
+  <property name="animated">
+   <bool>false</bool>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
@@ -87,6 +90,7 @@ QLineEdit {
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
+<<<<<<< HEAD
         <widget class="QLabel" name="upperLabel">
          <property name="text">
           <string>CakeChat</string>
@@ -98,6 +102,13 @@ QLineEdit {
        </item>
        <item>
         <widget class="QStackedWidget" name="stackedWidget">
+=======
+        <widget class="QStackedWidget" name="stackedWidget">
+         <property name="styleSheet">
+          <string notr="true">
+background-color: rgb(255, 255, 255);</string>
+         </property>
+>>>>>>> master
          <property name="currentIndex">
           <number>1</number>
          </property>
@@ -107,12 +118,38 @@ QLineEdit {
             <layout class="QHBoxLayout" name="horizontalLayout_2">
              <item>
               <widget class="QTextEdit" name="teChat">
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
                <property name="minimumSize">
                 <size>
                  <width>300</width>
                  <height>0</height>
                 </size>
                </property>
+<<<<<<< HEAD
+=======
+               <property name="autoFillBackground">
+                <bool>true</bool>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);
+border-image: url(:/eleballon.jpg);
+</string>
+               </property>
+               <property name="frameShape">
+                <enum>QFrame::StyledPanel</enum>
+               </property>
+               <property name="tabChangesFocus">
+                <bool>false</bool>
+               </property>
+               <property name="lineWrapMode">
+                <enum>QTextEdit::WidgetWidth</enum>
+               </property>
+>>>>>>> master
                <property name="readOnly">
                 <bool>true</bool>
                </property>
@@ -196,7 +233,7 @@ p, li { white-space: pre-wrap; }
          </widget>
          <widget class="QWidget" name="loginPage">
           <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="0">
+           <item row="1" column="0" alignment="Qt::AlignHCenter">
             <widget class="QFrame" name="loginFrame">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
@@ -204,6 +241,16 @@ p, li { white-space: pre-wrap; }
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+<<<<<<< HEAD
+=======
+             <property name="styleSheet">
+              <string notr="true">border-color: rgb(255, 255, 255);
+border-color: rgb(0, 0, 0);
+background-color: rgb(255, 255, 255);
+alternate-background-color: rgb(255, 255, 255);
+selection-color: rgb(255, 255, 255);</string>
+             </property>
+>>>>>>> master
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -226,14 +273,28 @@ p, li { white-space: pre-wrap; }
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_5">
                   <item>
+<<<<<<< HEAD
                    <widget class="QLabel" name="serverLabel">
+=======
+                   <widget class="QLabel" name="IDlabel">
+                    <property name="styleSheet">
+                     <string notr="true"/>
+                    </property>
+>>>>>>> master
                     <property name="text">
                      <string>Server:</string>
                     </property>
                    </widget>
                   </item>
                   <item>
+<<<<<<< HEAD
                    <widget class="QLabel" name="label">
+=======
+                   <widget class="QLabel" name="PWlable">
+                    <property name="styleSheet">
+                     <string notr="true">border-color: rgb(0, 0, 0);</string>
+                    </property>
+>>>>>>> master
                     <property name="text">
                      <string>Name: </string>
                     </property>
@@ -273,9 +334,15 @@ p, li { white-space: pre-wrap; }
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
+<<<<<<< HEAD
                  <spacer name="horizontalSpacer">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
+=======
+                 <widget class="QPushButton" name="pbLogin">
+                  <property name="styleSheet">
+                   <string notr="true">border-color: rgb(0, 0, 0);</string>
+>>>>>>> master
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -293,9 +360,15 @@ p, li { white-space: pre-wrap; }
                  </widget>
                 </item>
                 <item>
+<<<<<<< HEAD
                  <spacer name="horizontalSpacer_2">
                   <property name="orientation">
                    <enum>Qt::Horizontal</enum>
+=======
+                 <widget class="QPushButton" name="pbSignup">
+                  <property name="styleSheet">
+                   <string notr="true">border-color: rgb(0, 0, 0);</string>
+>>>>>>> master
                   </property>
                   <property name="sizeHint" stdset="0">
                    <size>
@@ -308,6 +381,40 @@ p, li { white-space: pre-wrap; }
                </layout>
               </item>
              </layout>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="layoutDirection">
+              <enum>Qt::LeftToRight</enum>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+             <property name="pixmap">
+              <pixmap resource="icons.qrc">:/drunkenele.jpg</pixmap>
+             </property>
+             <property name="scaledContents">
+              <bool>true</bool>
+             </property>
+             <property name="alignment">
+              <set>Qt::AlignCenter</set>
+             </property>
+             <property name="wordWrap">
+              <bool>false</bool>
+             </property>
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <property name="textInteractionFlags">
+              <set>Qt::NoTextInteraction</set>
+             </property>
             </widget>
            </item>
           </layout>
@@ -339,6 +446,12 @@ p, li { white-space: pre-wrap; }
   <tabstop>pbLogin</tabstop>
   <tabstop>pbSend</tabstop>
  </tabstops>
+<<<<<<< HEAD
  <resources/>
+=======
+ <resources>
+  <include location="icons.qrc"/>
+ </resources>
+>>>>>>> master
  <connections/>
 </ui>

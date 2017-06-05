@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include <QRegExpValidator>
+#include "dlsignin.h"
 #include "user.h"
 #define PORT 1234
 
@@ -27,11 +28,16 @@ private slots:
     void onReadyRead();
     void onConnected();
     void onDisconnected();
+    void on_pbSignup_clicked();
+
+private slots:
+
 private:
     Ui::MainWindow *ui;
     User *user;
     QTcpSocket* socket;
-    int clientRoomNumber = 0; //client's own number;
+    User*user;
+    int clientRoomNumber=0;
 };
 
 #endif // MAINWINDOW_H

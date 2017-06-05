@@ -15,10 +15,20 @@ TEMPLATE = app
 
 SOURCES += main.cpp \
     mainwindow.cpp \
+<<<<<<< HEAD
+=======
+    dlsignin.cpp \
+    simplecrypt.cpp \
+>>>>>>> master
     user.cpp
 
 HEADERS  += \
     mainwindow.h \
+<<<<<<< HEAD
+=======
+    dlsignin.h \
+    simplecrypt.h \
+>>>>>>> master
     user.h
 
 FORMS    += \

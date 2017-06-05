@@ -10,7 +10,14 @@
 #include <QVector>
 #include "roommanager.h"
 #include "room.h"
-
+#include <QtSql/QSqlDatabase>
+#include <QtDebug>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QFileInfo>
+#include "server.h"
+#include "simplecrypt.h"
+#include "smtp.h"
 #define PORT 1234
 class RoomManager;
 typedef struct
@@ -28,6 +35,7 @@ public:
     explicit Server(QObject* parent = 0);
     void sendUserList();
     void sendToAll(const QString&);
+    ~Server();
 public slots:
     void onNewConnection();
    void onDisconnect();
@@ -36,6 +44,12 @@ private:
     QTcpServer* server;
     QMap<QTcpSocket*,userInfo> clients;
     RoomManager* manager;
+    QSqlDatabase myDB;
+    SimpleCrypt crypto;
+private slots:
+    void sendMail(QString, QString);
+    void mailSent(QString);
+
 };
 
 #endif // SERVER_H

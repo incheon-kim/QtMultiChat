@@ -10,7 +10,10 @@ dlsignin::dlsignin(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dlsignin)
 {
+    qDebug()<<"dlsignin working";
     ui->setupUi(this);
+    socket->connectToHost("127.0.0.1",1234);
+
 }
 
 dlsignin::~dlsignin()
@@ -52,6 +55,7 @@ void dlsignin::on_pbSignupform_clicked()
         QMessageBox::information(NULL, "Warning",
                                  "비밀번호를 다시 확인해 주세요.",
                                  QMessageBox::Ok);
+        return;
     }
     //encryption
     SimpleCrypt crypto;
@@ -64,7 +68,18 @@ void dlsignin::on_pbSignupform_clicked()
                                  "이메일을 입력해 주세요.",
                                  QMessageBox::Ok);
         return;}
-
+    QString token;
+    QString tokenCheck= ui->leEmail->text().trimmed();
+    for(int i=0; i<makeEmail.size();i++){
+        if(i % 2 == 0 && makeEmail[i] != '@'){
+            token += makeEmail[i];
+        }
+    }
+    if(!token.compare(tokenCheck)){
+        QMessageBox::information(NULL, "Warning",
+                                 "인증번호를 확인해 주세요.",
+                                 QMessageBox::Ok);
+    }
     int ugender=0;
 
     if(ui->Female->isChecked())
@@ -73,7 +88,9 @@ void dlsignin::on_pbSignupform_clicked()
     else if(ui->Male->isChecked())
             ugender=0;
 
-    socket->write(QString("/makeID:"+ makeid +"/makepw:"+enpw+"/makeemail:"+makeEmail+"/makegender:"+ugender).toUtf8());
+    socket->write(QString("/makeID:"+ makeid +"/makepw:"+enpw+"/makeemail:"+makeEmail+"\n").toUtf8());
+    //+"/makegender:"+ugender+
+    qDebug()<<"data send to server";
 }
 
 void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
@@ -83,7 +100,8 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
         QMessageBox::information(NULL, "Warning",
                                  "아이디를 입력해 주세요.",
                                  QMessageBox::Ok);
-        return;}
+        return;
+}
     if(makeid.count()>30){ //id sould be under 30 char
         QMessageBox::information(NULL, "Warning",
                                                  "아이디는 30자 이내로 입력해 주세요.",
@@ -120,5 +138,22 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
             userToken += userEmail[i];
         }
     }
-    socket->write(QString("/email:"+userEmail+"/Token:"+userToken ).toUtf8());
+    socket->write(QString("/email:"+userEmail+"/Token:"+userToken+"\n" ).toUtf8());
+    qDebug()<<"token send to server";
+    QMessageBox::information(NULL, "Info",
+                             "인증번호 전송완료!\n 이메일을 확인해 주세요!.",
+                             QMessageBox::Ok);
+}
+
+void dlsignin::setSocket(QTcpSocket *socket){
+    this->socket = socket;
+}
+
+void dlsignin::onConnected(){
+    qDebug()<<"signupform connected!";
+
+}
+
+void dlsignin::onDisconnected(){
+    socket->close();
 }
