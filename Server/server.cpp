@@ -2,7 +2,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QSqlRecord>
-#define Path_to_DB "/home/menukim/git/QtMultiChat/db/ddj.db"  //db path
+#define Path_to_DB "/home/mj/git/QtMultiChat/db/ddj.db"  //db path
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -101,6 +101,7 @@ void Server::onReadyRead() {
     QRegExp messageRex("^(.*):(.*):/say:(.*)$");
 
     QSqlQuery q(myDB);
+    int gender = -1;
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
@@ -110,17 +111,20 @@ void Server::onReadyRead() {
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
             QString query="SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'";
-            QString query2="SELECT Gender FROM usrInfo";
+           // QString query2="SELECT Gender FROM usrInfo ";
             if(q.exec(query)){
                 if(q.next()){
                     q.exec(query2);
-                    if(q.next()) {
+                    if(q.next())
+                    {
                         QSqlRecord record = q.record();
-                        qDebug() << "gender : " << record.value(1).toInt();
+                        gender = record.value(1).toInt();
+                        qDebug() << "gender : " << gender ;
                     }
                 userInfo temp;
                 temp=clients[socket];
                 temp.userName=userID;
+                temp.userSex=gender;
                 clients[socket] = temp;
                 sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                 sendUserList();
@@ -139,12 +143,32 @@ void Server::onReadyRead() {
                        {
                            if((*iter).getPeople()<2) //need to modify here later(male/female)
                            {
-                               (*iter).enter();
-                               number="number";
-                               enter=true;
-                               qDebug()<<"roomPeople"<<(*iter).getPeople();
-                               qDebug()<<"roomNumber"<<roomNumber;
-                               break;
+                               if(clients[socket].userSex==0 && (*iter).needMale())
+                               {
+                                   (*iter).enter();
+                                   (*iter).enterMale();
+                                   number="number";
+                                   enter=true;
+                                   qDebug()<<"Enter Male";
+                                   qDebug()<<"roomPeople"<<(*iter).getPeople();
+                                   qDebug()<<"roomNumber"<<roomNumber;
+                                   break;
+                               }
+                               else if(clients[socket].userSex==1&&(*iter).needFemale())
+                               {
+
+                                   (*iter).enter();
+                                   (*iter).enterFemale();
+                                   number="number";
+                                   enter=true;
+                                   qDebug()<<"Enter Feale";
+                                   qDebug()<<"roomPeople"<<(*iter).getPeople();
+                                   qDebug()<<"roomNumber"<<roomNumber;
+                                   break;
+
+
+                               }
+
                            }
                            roomNumber++;
                        }
@@ -155,9 +179,21 @@ void Server::onReadyRead() {
 
                        manager->createRoom();
                        QVector<Room>::iterator getRoom= manager->lastIter();
+                       if(clients[socket].userSex==0){
                        (*getRoom).enter();
-                       qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+                       (*getRoom).enterMale();
+                            qDebug()<<"Enter Male";
+                           qDebug()<<"roomPeople"<<(*getRoom).getPeople();
                        qDebug()<<"enterRoom"<<roomNumber;
+                       }
+                       else
+                       {  (*getRoom).enter();
+                           (*getRoom).enterFemale();
+                            qDebug()<<"Enter Feale";
+                               qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+                           qDebug()<<"enterRoom"<<roomNumber;
+
+                       }
                }
 
                 userInfo info;
@@ -232,7 +268,7 @@ void Server::onReadyRead() {
 void Server::sendMail(QString Token, QString Destination){
     // 정보
     QString admin = "masterofddj@gmail.com";
-    QString pwd = "";
+    QString pwd = "qwerty1995";
     QString host = "smtp.gmail.com";
     QString Title = "동동주 인증메일 입니다.";
     QString body = "안녕하세요, 동동주 입니다.\n인증번호는 : ";

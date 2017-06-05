@@ -19,17 +19,16 @@ void Room::out()
 {
     --numPeople;
 }
-/*
-bool Room::getFemale()
+bool Room::needFemale()
 {
-    if(female==true)
+    if(female==false)
         return true;
     else
         return false;
 }
-bool Room::getMale()
+bool Room::needMale()
 {
-    if(male==true)
+    if(male==false)
         return true;
     else return false;
 }
@@ -40,4 +39,4 @@ void Room::enterFemale()
 void Room::enterMale()
 {
     male=true;
-}*/
+}
