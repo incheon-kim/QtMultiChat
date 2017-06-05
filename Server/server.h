@@ -19,7 +19,7 @@
 #include "simplecrypt.h"
 #include "smtp.h"
 #define PORT 1234
-class RoomManager;
+
 typedef struct
 {
     QString userName ="NONE";
@@ -38,18 +38,17 @@ public:
     ~Server();
 public slots:
     void onNewConnection();
-   void onDisconnect();
+    void onDisconnect();
     void onReadyRead();
 private:
     QTcpServer* server;
     QMap<QTcpSocket*,userInfo> clients;
-    RoomManager* manager;
+    RoomManager *manager;
     QSqlDatabase myDB;
     SimpleCrypt crypto;
 private slots:
     void sendMail(QString, QString);
     void mailSent(QString);
-
 };
 
 #endif // SERVER_H

@@ -3,10 +3,10 @@
 #include <QRegExp>
 #include <QSqlRecord>
 #define Path_to_DB "/home/menukim/git/QtMultiChat/db/ddj.db"  //db path
-
 Server::Server(QObject* parent) : QObject(parent) {
+    this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
-    manager=new RoomManager();
+     manager=new RoomManager();
     connect(server, SIGNAL(newConnection()),
             this,   SLOT(onNewConnection()));
 
@@ -31,7 +31,6 @@ Server::Server(QObject* parent) : QObject(parent) {
 
 }
 
-
 Server::~Server(){
     myDB.close();
 
@@ -43,21 +42,26 @@ void Server::sendUserList()
     //sendToAll(line);
 }
 
+
 void Server::sendToAll(const QString& msg) {
     foreach (QTcpSocket* socket, clients.keys()) {
         socket->write(msg.toUtf8());
     }
 }
 
+
 void Server::onNewConnection() {
     QTcpSocket* socket = server->nextPendingConnection();
     connect(socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(socket, SIGNAL(disconnected()), this, SLOT(onDisconnect()));
+
 }
+
 
 void Server::onDisconnect() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     qDebug() << "Client disconnected: " << socket->peerAddress().toString();
+
 
     int compareRoomNumber=1;
          QVector<Room>::iterator iter;
@@ -79,13 +83,13 @@ void Server::onDisconnect() {
                  compareRoomNumber++;
     }
 
+
     QString username = clients.value(socket).userName;
     sendToAll(QString("/system:" + username + " has left the chat.\n"));
     clients.remove(socket);
     sendUserList();
 }
 }
-
 
 //  /makegender:([0-1])
 void Server::onReadyRead() {
@@ -101,6 +105,7 @@ void Server::onReadyRead() {
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
         if (loginRex.indexIn(line) != -1) {
+
             QString userID = loginRex.cap(1);
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
@@ -242,4 +247,3 @@ void Server::mailSent(QString status){
     if(status == "Message sent")
         qDebug() <<"Email Successfully sent.";
 }
-

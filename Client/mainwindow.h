@@ -21,8 +21,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 public slots:
-
-private slots:
     void on_pbLogin_clicked();
     void on_pbSend_clicked();
     void onReadyRead();
@@ -34,10 +32,10 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    User *user;
     QTcpSocket* socket;
     User*user;
     int clientRoomNumber=0;
 };
+
 
 #endif // MAINWINDOW_H

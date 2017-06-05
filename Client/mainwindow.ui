@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>CakeChat Client</string>
+   <string>Dongdongju Client</string>
   </property>
   <property name="styleSheet">
    <string notr="true">QFrame {
@@ -82,6 +82,9 @@ QLineEdit {
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QFrame" name="mainFrame">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
       </property>
@@ -90,25 +93,11 @@ QLineEdit {
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
-<<<<<<< HEAD
-        <widget class="QLabel" name="upperLabel">
-         <property name="text">
-          <string>CakeChat</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QStackedWidget" name="stackedWidget">
-=======
         <widget class="QStackedWidget" name="stackedWidget">
          <property name="styleSheet">
           <string notr="true">
 background-color: rgb(255, 255, 255);</string>
          </property>
->>>>>>> master
          <property name="currentIndex">
           <number>1</number>
          </property>
@@ -130,8 +119,6 @@ background-color: rgb(255, 255, 255);</string>
                  <height>0</height>
                 </size>
                </property>
-<<<<<<< HEAD
-=======
                <property name="autoFillBackground">
                 <bool>true</bool>
                </property>
@@ -149,7 +136,6 @@ border-image: url(:/eleballon.jpg);
                <property name="lineWrapMode">
                 <enum>QTextEdit::WidgetWidth</enum>
                </property>
->>>>>>> master
                <property name="readOnly">
                 <bool>true</bool>
                </property>
@@ -158,8 +144,7 @@ border-image: url(:/eleballon.jpg);
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Helvetica,Arial,sans-serif'; font-size:12px; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:7pt;&quot;&gt;kekekek&lt;/span&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:7pt;&quot;&gt;dfgdfgdfg&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                </property>
               </widget>
              </item>
@@ -182,6 +167,9 @@ p, li { white-space: pre-wrap; }
                  <width>150</width>
                  <height>16777215</height>
                 </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
                </property>
                <property name="selectionMode">
                 <enum>QAbstractItemView::NoSelection</enum>
@@ -212,6 +200,9 @@ p, li { white-space: pre-wrap; }
             <layout class="QHBoxLayout" name="horizontalLayout">
              <item>
               <widget class="QLineEdit" name="leMessage">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
                <property name="clearButtonEnabled">
                 <bool>true</bool>
                </property>
@@ -219,8 +210,11 @@ p, li { white-space: pre-wrap; }
              </item>
              <item>
               <widget class="QPushButton" name="pbSend">
+               <property name="styleSheet">
+                <string notr="true">background-color: rgb(255, 255, 255);</string>
+               </property>
                <property name="text">
-                <string>Send</string>
+                <string>전송</string>
                </property>
                <property name="default">
                 <bool>true</bool>
@@ -241,8 +235,6 @@ p, li { white-space: pre-wrap; }
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
-<<<<<<< HEAD
-=======
              <property name="styleSheet">
               <string notr="true">border-color: rgb(255, 255, 255);
 border-color: rgb(0, 0, 0);
@@ -250,7 +242,6 @@ background-color: rgb(255, 255, 255);
 alternate-background-color: rgb(255, 255, 255);
 selection-color: rgb(255, 255, 255);</string>
              </property>
->>>>>>> master
              <property name="frameShape">
               <enum>QFrame::StyledPanel</enum>
              </property>
@@ -259,44 +250,26 @@ selection-color: rgb(255, 255, 255);</string>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <widget class="QLabel" name="label_2">
-                <property name="text">
-                 <string>Sign in</string>
-                </property>
-                <property name="alignment">
-                 <set>Qt::AlignCenter</set>
-                </property>
-               </widget>
-              </item>
-              <item>
                <layout class="QHBoxLayout" name="horizontalLayout_3">
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_5">
                   <item>
-<<<<<<< HEAD
-                   <widget class="QLabel" name="serverLabel">
-=======
                    <widget class="QLabel" name="IDlabel">
                     <property name="styleSheet">
                      <string notr="true"/>
                     </property>
->>>>>>> master
                     <property name="text">
-                     <string>Server:</string>
+                     <string>아이디</string>
                     </property>
                    </widget>
                   </item>
                   <item>
-<<<<<<< HEAD
-                   <widget class="QLabel" name="label">
-=======
                    <widget class="QLabel" name="PWlable">
                     <property name="styleSheet">
                      <string notr="true">border-color: rgb(0, 0, 0);</string>
                     </property>
->>>>>>> master
                     <property name="text">
-                     <string>Name: </string>
+                     <string>비밀번호</string>
                     </property>
                    </widget>
                   </item>
@@ -305,25 +278,40 @@ selection-color: rgb(255, 255, 255);</string>
                 <item>
                  <layout class="QVBoxLayout" name="verticalLayout_3">
                   <item>
-                   <widget class="QLineEdit" name="leServer">
+                   <widget class="QLineEdit" name="leID">
                     <property name="minimumSize">
                      <size>
                       <width>170</width>
                       <height>0</height>
                      </size>
                     </property>
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    </property>
                     <property name="text">
-                     <string>localhost</string>
+                     <string/>
                     </property>
                     <property name="maxLength">
                      <number>15</number>
                     </property>
+                    <property name="clearButtonEnabled">
+                     <bool>true</bool>
+                    </property>
                    </widget>
                   </item>
                   <item>
-                   <widget class="QLineEdit" name="leName">
+                   <widget class="QLineEdit" name="lePW">
+                    <property name="styleSheet">
+                     <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    </property>
                     <property name="maxLength">
                      <number>12</number>
+                    </property>
+                    <property name="echoMode">
+                     <enum>QLineEdit::Password</enum>
+                    </property>
+                    <property name="clearButtonEnabled">
+                     <bool>true</bool>
                     </property>
                    </widget>
                   </item>
@@ -334,49 +322,24 @@ selection-color: rgb(255, 255, 255);</string>
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <item>
-<<<<<<< HEAD
-                 <spacer name="horizontalSpacer">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-=======
                  <widget class="QPushButton" name="pbLogin">
                   <property name="styleSheet">
                    <string notr="true">border-color: rgb(0, 0, 0);</string>
->>>>>>> master
                   </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
-                  </property>
-                 </spacer>
-                </item>
-                <item>
-                 <widget class="QPushButton" name="pbLogin">
                   <property name="text">
-                   <string>Login</string>
+                   <string>로그인</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-<<<<<<< HEAD
-                 <spacer name="horizontalSpacer_2">
-                  <property name="orientation">
-                   <enum>Qt::Horizontal</enum>
-=======
                  <widget class="QPushButton" name="pbSignup">
                   <property name="styleSheet">
                    <string notr="true">border-color: rgb(0, 0, 0);</string>
->>>>>>> master
                   </property>
-                  <property name="sizeHint" stdset="0">
-                   <size>
-                    <width>40</width>
-                    <height>20</height>
-                   </size>
+                  <property name="text">
+                   <string>회원가입</string>
                   </property>
-                 </spacer>
+                 </widget>
                 </item>
                </layout>
               </item>
@@ -423,8 +386,11 @@ selection-color: rgb(255, 255, 255);</string>
        </item>
        <item>
         <widget class="QLabel" name="lowerLabel">
+         <property name="styleSheet">
+          <string notr="true"/>
+         </property>
          <property name="text">
-          <string>by kolya-t in 2016</string>
+          <string>by dongdongju in Dongguk University</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -438,20 +404,17 @@ selection-color: rgb(255, 255, 255);</string>
   </widget>
  </widget>
  <tabstops>
-  <tabstop>leName</tabstop>
-  <tabstop>leServer</tabstop>
+  <tabstop>leID</tabstop>
+  <tabstop>lePW</tabstop>
+  <tabstop>pbLogin</tabstop>
+  <tabstop>pbSignup</tabstop>
   <tabstop>teChat</tabstop>
   <tabstop>lwUsers</tabstop>
   <tabstop>leMessage</tabstop>
-  <tabstop>pbLogin</tabstop>
   <tabstop>pbSend</tabstop>
  </tabstops>
-<<<<<<< HEAD
- <resources/>
-=======
  <resources>
   <include location="icons.qrc"/>
  </resources>
->>>>>>> master
  <connections/>
 </ui>
