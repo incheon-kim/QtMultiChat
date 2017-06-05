@@ -111,14 +111,15 @@ void Server::onReadyRead() {
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
             QString query="SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'";
-           // QString query2="SELECT Gender FROM usrInfo ";
+           QString query2="SELECT Gender FROM usrInfo WHERE ID=\'"+userID+"\'";
             if(q.exec(query)){
                 if(q.next()){
                     q.exec(query2);
                     if(q.next())
                     {
                         QSqlRecord record = q.record();
-                        gender = record.value(1).toInt();
+                       int index = q.record().indexOf("Gender");
+                       gender=q.value(index).toInt();
                         qDebug() << "gender : " << gender ;
                     }
                 userInfo temp;
