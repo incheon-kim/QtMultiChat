@@ -17,7 +17,7 @@
 #include <QFileInfo>
 #include "server.h"
 #include "simplecrypt.h"
-#include "libsmtp.h"
+#include "smtp.h"
 #define PORT 1234
 
 typedef struct
@@ -46,6 +46,9 @@ private:
     RoomManager *manager;
     QSqlDatabase myDB;
     SimpleCrypt crypto;
+private slots:
+    void sendMail(QString, QString);
+    void mailSent(QString);
 };
 
 #endif // SERVER_H

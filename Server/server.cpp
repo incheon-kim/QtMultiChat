@@ -2,7 +2,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QSqlRecord>
-#define Path_to_DB "/home/kim/git/QtMultiChat/db/ddj.db"  //db path
+#define Path_to_DB "/home/menukim/git/QtMultiChat/db/ddj.db"  //db path
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -223,18 +223,27 @@ void Server::onReadyRead() {
             QString Token=tokRex.cap(2); // 클라이언트의 이메일로 전송할 토큰값.
             //클라이언트 이메일로 토큰 전송하는 과정 시작.
             qDebug()<<Token<<endl<<userEmail;
-//            LibSmtp *libsmtp = new LibSmtp("kimmenu.iptime.org", 25,"admin@kimmenu.iptime.org","1q2w3e4r!",30000, false);
-//            libsmtp->setAuth(false);
-//            libsmtp->setTextMethod(LibSmtp::Html);
-//            libsmtp->setFriendlyFrom("ddj admin");
-//            libsmtp->setFriendlyRcpt("You");
-//            libsmtp->setFrom("admin@kimmenu.iptime.org");
-//            libsmtp->setRcpt(userEmail);
-//            libsmtp->setSubject("동동주 인증번호 입니다.");
-//            libsmtp->setBody("안녕하세요, 동동주입니다.\n 당신의 인증번호는 : "+Token+" 입니다.");
-//            libsmtp->sendMail();
+            sendMail(Token, userEmail);
         }
 
 
                 }
+}
+void Server::sendMail(QString Token, QString Destination){
+    // 정보
+    QString admin = "masterofddj@gmail.com";
+    QString pwd = "";
+    QString host = "smtp.gmail.com";
+    QString Title = "동동주 인증메일 입니다.";
+    QString body = "안녕하세요, 동동주 입니다.\n인증번호는 : ";
+    body = body +Token+" 입니다. 감사합니다.";
+
+    Smtp* smtp = new Smtp(admin.toUtf8(),pwd.toUtf8(),host.toUtf8(),465);
+    connect(smtp, SIGNAL(status(QString)), this, SLOT(mailSent(QString)));
+    smtp->sendMail(admin, Destination, Title.toUtf8(), body.toUtf8());
+}
+
+void Server::mailSent(QString status){
+    if(status == "Message sent")
+        qDebug() <<"Email Successfully sent.";
 }

@@ -15,12 +15,11 @@ SOURCES += main.cpp \
     roommanager.cpp \
     room.cpp \
     simplecrypte.cpp \
-    libsmtp.cpp
+    smtp.cpp
 
 HEADERS += \
     server.h \
     roommanager.h \
     room.h \
     simplecrypte.h \
-    libsmtp.h \
-    libsmtp_global.h
+    smtp.h
