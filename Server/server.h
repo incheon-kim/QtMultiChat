@@ -31,21 +31,25 @@ typedef struct
 
 class Server : QObject {
     Q_OBJECT
+
 public:
     explicit Server(QObject* parent = 0);
     void sendUserList();
     void sendToAll(const QString&);
     ~Server();
+
 public slots:
     void onNewConnection();
     void onDisconnect();
     void onReadyRead();
+
 private:
     QTcpServer* server;
     QMap<QTcpSocket*,userInfo> clients;
     RoomManager *manager;
     QSqlDatabase myDB;
     SimpleCrypt crypto;
+
 private slots:
     void sendMail(QString, QString);
     void mailSent(QString);

@@ -32,8 +32,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    QTcpSocket* socket;
-    User*user;
+    QTcpSocket *socket;
+    User *user;
     int clientRoomNumber=0;
 };
 

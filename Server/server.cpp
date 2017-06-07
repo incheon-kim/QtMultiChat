@@ -2,12 +2,12 @@
 #include <QString>
 #include <QRegExp>
 #include <QSqlRecord>
-#define Path_to_DB "/home/mj/git/QtMultiChat/db/ddj.db"  //db path
+#define Path_to_DB "../db/ddj.db"  //db path
 
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
-     manager=new RoomManager();
+    manager=new RoomManager();
     connect(server, SIGNAL(newConnection()),
             this,   SLOT(onNewConnection()));
 
@@ -29,7 +29,6 @@ Server::Server(QObject* parent) : QObject(parent) {
     else{
         qDebug()<<"[!]DB error: file not exist";
     }
-
 }
 
 Server::~Server(){

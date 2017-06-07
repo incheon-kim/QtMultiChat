@@ -6,7 +6,7 @@
 #include <QTcpSocket>
 #include "simplecrypt.h"
 #include <QString>
-QString userID;
+
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -43,8 +43,7 @@ void MainWindow::on_pbLogin_clicked() {
                                  QMessageBox::Ok);
         return;
     }
-    userID=userName;
-
+    user->setUserID(userName);
 
     QString userPW = ui->lePW->text().trimmed();
     if (userPW.isEmpty()) {
@@ -64,8 +63,8 @@ void MainWindow::on_pbLogin_clicked() {
 void MainWindow::on_pbSend_clicked() {
     QString message = ui->leMessage->text().trimmed();
     if (!message.isEmpty()) {
- QString sNumber = QString::number(user->getRoomNumber());
-        user->getSocket()->write(QString(sNumber + ":" +userID+":"+ "/say:" + message + "\n").toUtf8());
+    QString sNumber = QString::number(user->getRoomNumber());
+        user->getSocket()->write(QString(sNumber + ":" +user->getUserID()+":"+ "/say:" + message + "\n").toUtf8());
         //user->getSocket()->write(QString("/say:" + message + "\n").toUtf8());
         ui->leMessage->clear();
         ui->leMessage->setFocus();
@@ -131,7 +130,7 @@ void MainWindow::onReadyRead() {
         if(loginAcceptRex.indexIn(line)!=-1){
             QString loginA=loginAcceptRex.cap(1);
 
-            if(!userID.compare(loginA)){
+            if(!user->getUserID().compare(loginA)){
                 qDebug()<<"here3"<<endl;
                  ui->teChat->clear();
                  ui->stackedWidget->setCurrentWidget(ui->chatPage);
@@ -153,8 +152,8 @@ void MainWindow::onConnected() {
 void MainWindow::onDisconnected() {
     QMessageBox::warning(NULL, "Warning",
                         "check ID or PW", QMessageBox::Ok);
-  ui->stackedWidget->setCurrentWidget(ui->loginPage);
- user->getSocket()->connectToHost("127.0.0.1",1234);
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+    user->getSocket()->connectToHost("127.0.0.1",1234);
 }
 
 
