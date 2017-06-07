@@ -25,6 +25,19 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(user->getSocket(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(user->getSocket(), SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     user->getSocket()->connectToHost("127.0.0.1",1234);
+
+    // libgtk2.0-dev and libpulse-dev package should be installed
+    QMediaPlaylist *bgm = new QMediaPlaylist();
+    bgm->addMedia(QUrl("qrc:/sound/bgm.wav"));
+    bgm->setPlaybackMode(QMediaPlaylist::Loop);
+    QMediaContent noti(QUrl("qrc:/sound/noti.wav"));
+
+    _bgm = new QMediaPlayer;
+    _noti = new QMediaPlayer;
+    _bgm->setPlaylist(bgm);
+    _noti->setMedia(noti);
+    _bgm->play();
+    //BGM.play("qrc:/sound/noti.wav");
 }
 
 MainWindow::~MainWindow() {
@@ -117,9 +130,11 @@ void MainWindow::onReadyRead() {
                     QString curNumber = messageRex.cap(1);
                     if(user->getRoomNumber() == curNumber.toInt()){
                         qDebug() << "숫자 변환 테스트: " <<sNumber.toInt();
-                        QString user = messageRex.cap(2);
+                        QString msgUser = messageRex.cap(2);
                         QString message = messageRex.cap(3);
-                        ui->teChat->append("<p><b>" + user + "</b>: " + message + "</p>\n");
+                        ui->teChat->append("<p><b>" + msgUser + "</b>: " + message + "</p>\n");
+                        if(user->getUserID() != msgUser)
+                        _noti->play();
                     }
         }
 /*
