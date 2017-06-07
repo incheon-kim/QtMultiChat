@@ -2,8 +2,8 @@
 
 Room::Room()
 {
-   //female=false;
-   // male=fale;
+   female=false;
+   male=false;
     numPeople=0;
 }
 
@@ -40,4 +40,12 @@ void Room::enterFemale()
 void Room::enterMale()
 {
     male=true;
+}
+void Room::outFemale()
+{
+    female=false;
+}
+void Room::outMale()
+{
+    male=false;
 }
