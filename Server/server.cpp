@@ -2,7 +2,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QSqlRecord>
-#define Path_to_DB "/home/mj/git/QtMultiChat/db/ddj.db"  //db path
+#define Path_to_DB "../db/ddj.db"  //db path
 
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
@@ -86,7 +86,7 @@ void Server::onDisconnect() {
 
 
     QString username = clients.value(socket).userName;
-    sendToAll(QString("/system:" + username + " has left the chat.\n"));
+    sendToAll(QString(QString::number(temp.roomNumber)+":"+"/system:"+"상대방이 나갔습니다.\n"));
     clients.remove(socket);
     sendUserList();
 }
@@ -250,6 +250,8 @@ sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                 sendToAll(QString(number + ":" + setClientRoomNumber + "\n")); //send to connected client
 
                 qDebug()<<"sendingtest";
+                // 상대방 접속 메세지
+                sendToAll(QString((QString::number(clients[socket].roomNumber))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+"상대방이 접속했습니다."));
                 }
 
                 else{

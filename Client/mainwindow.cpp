@@ -76,7 +76,7 @@ void MainWindow::onReadyRead() {
     qDebug()<<"readyreadon";
     QRegExp numberRex("^(.*):([0-9])$"); //client'snumber
     QRegExp usersRex("^/users:(.*)$");
-    QRegExp systemRex("^/system:(.*)$");
+    QRegExp systemRex("^(.*):(.*):/system:(.*)$");
     QRegExp messageRex("^(.*):(.*):(.*)$");
     //QRegExp messageRex("^(.*):(.*)$");
     QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
@@ -104,8 +104,13 @@ void MainWindow::onReadyRead() {
             }
 
         else if (systemRex.indexIn(line) != -1) {
-            QString msg = systemRex.cap(1);
-            ui->teChat->append("<p color=\"gray\">" + msg + "</p>\n");
+            QString menNum = systemRex.cap(1);
+            QString roomNum = systemRex.cap(2);
+            QString msg = systemRex.cap(3);
+            qDebug()<<roomNum.toInt()<<msg;
+            if(user->getRoomNumber() == roomNum.toInt() && menNum == 1){
+                ui->teChat->append("<p color=\"gray\">" + msg + "</p>\n");
+            }
         }
         else if (messageRex.indexIn(line) != -1) {
                     QString curNumber = messageRex.cap(1);

@@ -16,7 +16,6 @@ void User::setRoomNumber(int clientRoomNumber)
 
 int User::getRoomNumber()
 {
-
     return clientRoomNumber;
 }
  QTcpSocket* User::getSocket()
