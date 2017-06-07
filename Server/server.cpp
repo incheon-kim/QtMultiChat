@@ -2,11 +2,8 @@
 #include <QString>
 #include <QRegExp>
 #include <QSqlRecord>
-<<<<<<< HEAD
 #define Path_to_DB "/home/mj/git/QtMultiChat/db/ddj.db"  //db path
-=======
-#define Path_to_DB "/home/kim/git/QtMultiChat/db/ddj.db"  //db path
->>>>>>> edad7211dab62cbed8050c7ac4c0702b08409195
+
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -145,22 +142,34 @@ void Server::onReadyRead() {
             QString query="SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'";
             QString query2="SELECT Gender FROM usrInfo WHERE ID=\'"+userID+"\'";
              qDebug()<<"q sc"<<endl;
+             int gender_temp;
             if(q.exec(query)){
                 if(q.next()){
                     qDebug()<<"q1 sc"<<endl;
                     q.exec(query2);
-                    while(q.next()) {
+                    if(q.next()) {
                          qDebug()<<"q2 sc"<<endl;
                         QSqlRecord record = q.record();
                         int gender =q.record().indexOf("Gender");
-                        int g = q.value(gender).toInt();
-                        qDebug() << "gender : " << g;
+                        int gender_temp = q.value(gender).toInt();
+                        qDebug() << "gender : " << gender_temp;
+                        userInfo temp;
+                        temp=clients[socket];
+                        temp.userName=userID;
+                        temp.userSex=gender_temp;
+                        clients[socket]=temp;
                     }
+                    /*
                 userInfo temp;
                 temp=clients[socket];
                 temp.userName=userID;
+                qDebug() << "gender : " << gender_temp;
+                temp.userSex=gender_temp;
                 clients[socket] = temp;
-                sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
+
+                qDebug()<<"ciient's sex"<<clients[socket].userSex;
+*/
+sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                 sendUserList();
                 qDebug() << userID << "logged in.";
 
@@ -177,12 +186,31 @@ void Server::onReadyRead() {
                        {
                            if((*iter).getPeople()<2) //need to modify here later(male/female)
                            {
-                               (*iter).enter();
-                               number="number";
-                               enter=true;
-                               qDebug()<<"roomPeople"<<(*iter).getPeople();
-                               qDebug()<<"roomNumber"<<roomNumber;
-                               break;
+                               qDebug()<<"usersex"<<clients[socket].userSex;
+                               if(clients[socket].userSex==0 && (*iter).needMale())
+                               {
+                                   (*iter).enter();
+                                   (*iter).enterMale();
+                                   number="number";
+                                   enter = true;
+                                   qDebug()<<"Enter Male";
+                                   qDebug()<<"roomPeople"<<(*iter).getPeople();
+                                   qDebug()<<"roomNumber"<<roomNumber;
+                                   break;
+
+                               }
+                               else if(clients[socket].userSex==1&&(*iter).needFemale())
+                               {
+
+                                   (*iter).enter();
+                                   (*iter).enterFemale();
+                                   number="number";
+                                   enter = true;
+                                   qDebug()<<"Enter Female";
+                                   qDebug()<<"roomPeople"<<(*iter).getPeople();
+                                   qDebug()<<"roomNumber"<<roomNumber;
+                                   break;
+                             }
                            }
                            roomNumber++;
                        }
@@ -191,11 +219,27 @@ void Server::onReadyRead() {
                    if(enter==false)
                    {
 
+                         qDebug()<<"usersex"<<clients[socket].userSex;
                        manager->createRoom();
                        QVector<Room>::iterator getRoom= manager->lastIter();
-                       (*getRoom).enter();
-                       qDebug()<<"roomPeople"<<(*getRoom).getPeople();
-                       qDebug()<<"enterRoom"<<roomNumber;
+                       if(clients[socket].userSex==0)
+                       {
+                           (*getRoom).enter();
+                           (*getRoom).enterMale();
+                           qDebug()<<"ENter Male";
+                           qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+                           qDebug()<<"enter Room"<<roomNumber;
+
+                       }
+                       else{
+
+                           (*getRoom).enter();
+                           (*getRoom).enterFemale();
+                           qDebug()<<"ENter Female";
+                           qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+                           qDebug()<<"enter Room"<<roomNumber;
+
+                       }
                }
 
                 userInfo info;

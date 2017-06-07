@@ -9,16 +9,15 @@ public:
     void enter();
     void out();
     int getPeople();
-    /*
-    bool getFemale();
-    bool getMale();
+    bool needFemale();
+    bool needMale();
     void enterFemale();
     void enterMale();
-    */
+
 private:
     int numPeople;
-   // bool male;
-   // bool female;
+   bool male;
+   bool female;
 };
 
 #endif // ROOM_H
