@@ -2,7 +2,11 @@
 #include <QString>
 #include <QRegExp>
 #include <QSqlRecord>
+<<<<<<< HEAD
 #define Path_to_DB "/home/mj/git/QtMultiChat/db/ddj.db"  //db path
+=======
+#define Path_to_DB "/home/kim/git/QtMultiChat/db/ddj.db"  //db path
+>>>>>>> edad7211dab62cbed8050c7ac4c0702b08409195
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -93,30 +97,64 @@ void Server::onDisconnect() {
 
 //  /makegender:([0-1])
 void Server::onReadyRead() {
-
-    QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)$");
+    QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
+    //QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
     QRegExp tokRex("^/email:(.*)/Token:(.*)$");
     QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
-
     QRegExp messageRex("^(.*):(.*):/say:(.*)$");
 
     QSqlQuery q(myDB);
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
+        qDebug()<<line;
+        if(signupRex.indexIn(line) != -1){ //회원가입
+            qDebug()<<"enterd signupRex";
+            QString id=signupRex.cap(1);
+            QString enpw=signupRex.cap(2);
+            QString dcpw=crypto.decryptToString(enpw);
+            QString email=signupRex.cap(3);
+            QString gen = signupRex.cap(4);
+            QString enable ="1";
+            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"\'\,\'"+dcpw+"\'\,"+gen+"\,"+enable+")";
+            qDebug()<<query;
+            QString query2="INSERT INTO usrE (ID,Email) VALUES('"+id+"','"+email+"')";
+            q.prepare(query);
+            qDebug()<<"signupform data came to server";
+            if(q.exec(query)){
+                qDebug()<<"q1 ok";
+                    q.prepare(query2);
+                    if(q.exec(query2)){
+
+                             qDebug() << id << "signed up!.";
+                  }
+                    else{
+                        qDebug()<<q.lastError();
+                    }
+                }
+            else{
+                qDebug()<<q.lastError();
+            }
+            }
+
         if (loginRex.indexIn(line) != -1) {
 
             QString userID = loginRex.cap(1);
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
             QString query="SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'";
-            QString query2="SELECT Gender FROM usrInfo";
+            QString query2="SELECT Gender FROM usrInfo WHERE ID=\'"+userID+"\'";
+             qDebug()<<"q sc"<<endl;
             if(q.exec(query)){
                 if(q.next()){
+                    qDebug()<<"q1 sc"<<endl;
                     q.exec(query2);
-                    if(q.next()) {
+                    while(q.next()) {
+                         qDebug()<<"q2 sc"<<endl;
                         QSqlRecord record = q.record();
-                        qDebug() << "gender : " << record.value(1).toInt();
+                        int gender =q.record().indexOf("Gender");
+                        int g = q.value(gender).toInt();
+                        qDebug() << "gender : " << g;
                     }
                 userInfo temp;
                 temp=clients[socket];
@@ -178,7 +216,7 @@ void Server::onReadyRead() {
 
         }
 
-        if (messageRex.indexIn(line) != -1) {
+        else if (messageRex.indexIn(line) != -1) {
             QString num = messageRex.cap(1);
            QString user = messageRex.cap(2);
             QString msg = messageRex.cap(3);
@@ -188,37 +226,10 @@ void Server::onReadyRead() {
         }
 
 
-        if(signupRex.indexIn(line)!=-1){ //회원가입
-            qDebug()<<"enterd signupRex";
-            QString id=signupRex.cap(1);
-            QString enpw=signupRex.cap(2);
-            QString dcpw=crypto.decryptToString(enpw);
-            QString email=signupRex.cap(3);
-            int gender =0; //change! test use
-            QString gen = QString::number(gender);
-            QString Token=signupRex.cap(5);
-            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES('"+id+"','"+dcpw+"',"+gen+",1)";
-            QString query2="INSERT INTO usrE (ID,Email) VALUES('"+id+"','"+email+"')";
-            q.prepare(query);
-            qDebug()<<"signupform data came to server";
-            if(q.exec(query)==true){
-                qDebug()<<"q1 ok";
-                    q.prepare(query2);
-                    if(q.exec(query2)==true){
-
-                             qDebug() << id << "signed up!.";
-                  }
-                    else{
-                        qDebug()<<q.lastError();
-                    }
-                }
-            else{
-                qDebug()<<q.lastError();
-            }
-            }
 
 
-        if(tokRex.indexIn(line)!=-1){
+
+        else if(tokRex.indexIn(line)!=-1){
             QString userEmail=tokRex.cap(1); //이메일인증 버튼을 누른 클라이언트의 이메일주소
             QString Token=tokRex.cap(2); // 클라이언트의 이메일로 전송할 토큰값.
             //클라이언트 이메일로 토큰 전송하는 과정 시작.
