@@ -2,7 +2,7 @@
 #include <QString>
 #include <QRegExp>
 #include <QSqlRecord>
-#define Path_to_DB "/home/menukim/git/QtMultiChat/db/ddj.db"  //db path
+#define Path_to_DB "/home/mj/git/QtMultiChat/db/ddj.db"  //db path
 Server::Server(QObject* parent) : QObject(parent) {
     this->crypto.setKey(0x0c2ad4a4acb9f023);
     server = new QTcpServer(this);
@@ -232,7 +232,7 @@ void Server::onReadyRead() {
 void Server::sendMail(QString Token, QString Destination){
     // 정보
     QString admin = "masterofddj@gmail.com";
-    QString pwd = "";
+    QString pwd = "qwerty1995";
     QString host = "smtp.gmail.com";
     QString Title = "동동주 인증메일 입니다.";
     QString body = "안녕하세요, 동동주 입니다.\n인증번호는 : ";
