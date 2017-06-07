@@ -75,7 +75,7 @@ void MainWindow::onReadyRead() {
     qDebug()<<"readyreadon";
     QRegExp numberRex("^(.*):([0-9])$"); //client'snumber
     QRegExp usersRex("^/users:(.*)$");
-    QRegExp systemRex("^(.*):(.*):/system:(.*)$");
+    QRegExp systemRex("^(.*):(.*):/system:(.*):(.*)$");
     QRegExp messageRex("^(.*):(.*):(.*)$");
     //QRegExp messageRex("^(.*):(.*)$");
     QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
@@ -103,12 +103,14 @@ void MainWindow::onReadyRead() {
             }
 
         else if (systemRex.indexIn(line) != -1) {
-            QString menNum = systemRex.cap(1);
+            QString peopleNum = systemRex.cap(1);
             QString roomNum = systemRex.cap(2);
-            QString msg = systemRex.cap(3);
+            QString userName = systemRex.cap(3);
+            QString msg = systemRex.cap(4);
             qDebug()<<roomNum.toInt()<<msg;
-            if(user->getRoomNumber() == roomNum.toInt() && menNum == 1){
-                ui->teChat->append("<p color=\"gray\">" + msg + "</p>\n");
+            if(user->getRoomNumber() == roomNum.toInt() && peopleNum.toInt() != 1){
+                if(userName != user->getUserID())
+                ui->teChat->append("<p color=\"red\">" + userName +" "+ msg + "</p>\n");
             }
         }
         else if (messageRex.indexIn(line) != -1) {

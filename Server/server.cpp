@@ -98,7 +98,7 @@ void Server::onDisconnect() {
 
 
     QString username = clients.value(socket).userName;
-    sendToAll(QString(QString::number(temp.roomNumber)+":"+"/system:"+"상대방이 나갔습니다.\n"));
+    sendToAll(QString(QString::number(0)+":"+QString::number(temp.roomNumber)+":"+"/system:"+username+":"+"님이 나갔습니다.\n"));
     clients.remove(socket);
     sendUserList();
 }
@@ -171,13 +171,14 @@ void Server::onReadyRead() {
                         temp.userSex=gender_temp;
                         clients.insert(socket,temp);
                     }
-sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
+                //sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                 sendUserList();
                 qDebug() << userID << "logged in.";
 
                 sendToAll(QString("/LoginSuccess:"+userID+"\n"));
                 QString number;
                 int roomNumber=1;
+                int roomPeople=0;
                 bool enter=false;
 
                 qDebug()<<"ID"<<clients[socket].userName;
@@ -203,6 +204,7 @@ sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                                    enter = true;
                                    qDebug()<<"Enter Male";
                                    qDebug()<<"roomPeople"<<(*iter).getPeople();
+                                   roomPeople = (*iter).getPeople();
                                    qDebug()<<"roomNumber"<<roomNumber;
                                    break;
 
@@ -216,6 +218,7 @@ sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                                    enter = true;
                                    qDebug()<<"Enter Female";
                                    qDebug()<<"roomPeople"<<(*iter).getPeople();
+                                   roomPeople = (*iter).getPeople();
                                    qDebug()<<"roomNumber"<<roomNumber;
                                    break;
                              }
@@ -236,6 +239,7 @@ sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                            (*getRoom).enterMale();
                            qDebug()<<"ENter Male";
                            qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+                           roomPeople = (*getRoom).getPeople();
                            qDebug()<<"enter Room"<<roomNumber;
 
                        }
@@ -245,6 +249,7 @@ sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                            (*getRoom).enterFemale();
                            qDebug()<<"ENter Female";
                            qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+                           roomPeople = (*getRoom).getPeople();
                            qDebug()<<"enter Room"<<roomNumber;
 
                        }
@@ -263,7 +268,7 @@ sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
 
                 qDebug()<<"sendingtest";
                 // 상대방 접속 메세지
-                sendToAll(QString((QString::number(clients[socket].roomNumber))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+"상대방이 접속했습니다."));
+                sendToAll(QString((QString::number(roomPeople))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+clients[socket].userName+":"+"님이 접속했습니다.\n"));
                 }
 
                 else{
