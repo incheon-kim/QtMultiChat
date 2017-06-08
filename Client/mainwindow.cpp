@@ -77,7 +77,6 @@ void MainWindow::on_pbLogin_clicked() {
     QString cpw=crypto.encryptToString(userPW);
 
     user->getSocket()->write(QString("/userID:"+userName+"/userPW:"+cpw+"\n").toUtf8());
-    qDebug()<<"id pw send";
 }
 
 void MainWindow::on_pbSend_clicked() {
@@ -89,6 +88,7 @@ void MainWindow::on_pbSend_clicked() {
         ui->leMessage->clear();
         ui->leMessage->setFocus();
     }
+    _noti->play();
 }
 
 void MainWindow::onReadyRead() {
@@ -101,7 +101,6 @@ void MainWindow::onReadyRead() {
     QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
 
     while (user->getSocket()->canReadLine()) {
-        qDebug()<<"readyreadon1";
         QString sNumber;
         QString line = QString::fromUtf8(user->getSocket()->readLine()).trimmed();
         if(numberRex.indexIn(line) != -1)
@@ -155,7 +154,6 @@ void MainWindow::onReadyRead() {
             QString loginA=loginAcceptRex.cap(1);
 
             if(!user->getUserID().compare(loginA)){
-                qDebug()<<"here3"<<endl;
                  ui->teChat->clear();
                  ui->stackedWidget->setCurrentWidget(ui->chatPage);
                  ui->leMessage->setFocus();
@@ -181,10 +179,11 @@ void MainWindow::onDisconnected() {
  user->getSocket()->connectToHost("127.0.0.1",1234);
 
 
+}
 
 
-
-void MainWindow::on_pbSignup_clicked() {
+void MainWindow::on_pbSignup_clicked ()
+{
 
     dlsignin form;
     form.setSocket(user->getSocket());

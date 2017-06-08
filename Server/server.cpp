@@ -121,11 +121,10 @@ void Server::onReadyRead() {
             qDebug()<<"enterd signupRex";
             QString id=signupRex.cap(1);
             QString enpw=signupRex.cap(2);
-            QString dcpw=crypto.decryptToString(enpw);
             QString email=signupRex.cap(3);
             QString gen = signupRex.cap(4);
             QString enable ="1";
-            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"\'\,\'"+dcpw+"\'\,"+gen+"\,"+enable+")";
+            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"\'\,\'"+enpw+"\'\,"+gen+"\,"+enable+")";
             qDebug()<<query;
             QString query2="INSERT INTO usrE (ID,Email) VALUES('"+id+"','"+email+"')";
             q.prepare(query);
@@ -151,12 +150,21 @@ void Server::onReadyRead() {
             QString userID = loginRex.cap(1);
             QString userEnPW = loginRex.cap(2);
             QString userPW = crypto.decryptToString(userEnPW);
-            QString query="SELECT ID,PW FROM usrInfo WHERE ID=\'"+userID+"\'AND PW=\'"+userPW+"\'";
+            QString enpw;
+            QString query="SELECT PW FROM usrInfo WHERE ID=\'"+userID+"\'";
             QString query2="SELECT Gender FROM usrInfo WHERE ID=\'"+userID+"\'";
              qDebug()<<"q sc"<<endl;
              int gender_temp;
             if(q.exec(query)){
                 if(q.next()){
+                    QSqlRecord rr=q.record();
+                    int dc=q.record().indexOf("PW");
+                    QString dcp = q.value(dc).toString();
+                    enpw=crypto.decryptToString(dcp);
+                    if(enpw!=userPW){
+                        qDebug()<<"login fail";
+                        socket->disconnectFromHost();
+                    }
                     qDebug()<<"q1 sc"<<endl;
                     q.exec(query2);
                     if(q.next()) {
@@ -171,6 +179,7 @@ void Server::onReadyRead() {
                         temp.userSex=gender_temp;
                         clients.insert(socket,temp);
                     }
+
                 //sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
                 sendUserList();
                 qDebug() << userID << "logged in.";
