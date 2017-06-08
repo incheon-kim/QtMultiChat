@@ -7,16 +7,14 @@
 #include "simplecrypt.h"
 #include <QString>
 
-<<<<<<< HEAD
 
 
 QString userID;
-=======
->>>>>>> 98f347bf4913088a2ee398d19c363c520bce1737
+
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow)
 {
 
-    QSound :: play("://wii.wav");
+
     ui->setupUi(this);
     setCentralWidget(ui->mainFrame);
     connect(ui->leID, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
@@ -34,8 +32,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(user->getSocket(), SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     user->getSocket()->connectToHost("127.0.0.1",1234);
 
-<<<<<<< HEAD
-=======
+
     // libgtk2.0-dev and libpulse-dev package should be installed
     QMediaPlaylist *bgm = new QMediaPlaylist();
     bgm->addMedia(QUrl("qrc:/sound/bgm.wav"));
@@ -48,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     _noti->setMedia(noti);
     _bgm->play();
     //BGM.play("qrc:/sound/noti.wav");
->>>>>>> 98f347bf4913088a2ee398d19c363c520bce1737
 }
 
 MainWindow::~MainWindow() {
@@ -180,26 +176,21 @@ void MainWindow::onConnected() {
 void MainWindow::onDisconnected() {
     QMessageBox::warning(NULL, "Warning",
                         "check ID or PW", QMessageBox::Ok);
-<<<<<<< HEAD
+
   ui->stackedWidget->setCurrentWidget(ui->loginPage);
  user->getSocket()->connectToHost("127.0.0.1",1234);
 
-=======
-    ui->stackedWidget->setCurrentWidget(ui->loginPage);
-    user->getSocket()->connectToHost("127.0.0.1",1234);
->>>>>>> 98f347bf4913088a2ee398d19c363c520bce1737
-}
 
 
 
 
-void MainWindow::on_pbSignup_clicked()
-{
+void MainWindow::on_pbSignup_clicked() {
 
     dlsignin form;
     form.setSocket(user->getSocket());
     form.setModal(true);
     form.exec();
-}
 
+
+}
 

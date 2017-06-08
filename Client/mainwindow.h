@@ -9,7 +9,7 @@
 #include "dlsignin.h"
 #include "user.h"
 #define PORT 1234
-#include <QSound>
+
 
 namespace Ui {
 class MainWindow;
