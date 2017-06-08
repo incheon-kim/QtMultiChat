@@ -124,7 +124,7 @@ background-color: rgb(255, 255, 255);</string>
                </property>
                <property name="styleSheet">
                 <string notr="true">background-color: rgb(255, 255, 255);
-border-image: url(:/eleballon.jpg);
+border-image: url(:/thisthis.jpg);
 </string>
                </property>
                <property name="frameShape">
@@ -169,7 +169,8 @@ p, li { white-space: pre-wrap; }
                 </size>
                </property>
                <property name="styleSheet">
-                <string notr="true">background-color: rgb(255, 255, 255);</string>
+                <string notr="true">background-color: rgb(255, 255, 255);
+border-image: url(:/yeah.jpg);</string>
                </property>
                <property name="selectionMode">
                 <enum>QAbstractItemView::NoSelection</enum>

@@ -6,9 +6,14 @@
 #include <QTcpSocket>
 #include "simplecrypt.h"
 #include <QString>
+
+
+
 QString userID;
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow)
 {
+
+    QSound :: play("://wii.wav");
     ui->setupUi(this);
     setCentralWidget(ui->mainFrame);
     connect(ui->leID, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
@@ -25,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(user->getSocket(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(user->getSocket(), SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     user->getSocket()->connectToHost("127.0.0.1",1234);
+
 }
 
 MainWindow::~MainWindow() {
@@ -155,6 +161,7 @@ void MainWindow::onDisconnected() {
                         "check ID or PW", QMessageBox::Ok);
   ui->stackedWidget->setCurrentWidget(ui->loginPage);
  user->getSocket()->connectToHost("127.0.0.1",1234);
+
 }
 
 

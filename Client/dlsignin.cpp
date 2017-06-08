@@ -205,4 +205,5 @@ void dlsignin::onConnected(){
 
 void dlsignin::onDisconnected(){
     socket->close();
+    close();
 }
