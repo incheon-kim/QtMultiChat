@@ -22,3 +22,11 @@ int User::getRoomNumber()
 {
     return socket;
 }
+
+ void User::setUserID(QString name){
+     this->userID = name;
+ }
+
+ QString User::getUserID(){
+     return this->userID;
+ }

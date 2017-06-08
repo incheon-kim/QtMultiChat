@@ -6,7 +6,12 @@
 
 QT       += core gui
 QT       += network
+<<<<<<< HEAD
 QT += multimedia
+=======
+
+
+>>>>>>> 98f347bf4913088a2ee398d19c363c520bce1737
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,4 +36,5 @@ FORMS    += \
     dlsignin.ui
 
 RESOURCES += \
-    icons.qrc
+    icons.qrc \
+    sound.qrc

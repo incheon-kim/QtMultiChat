@@ -13,6 +13,8 @@ public:
     bool needMale();
     void enterFemale();
     void enterMale();
+    void outFemale();
+    void outMale();
 
 private:
     int numPeople;

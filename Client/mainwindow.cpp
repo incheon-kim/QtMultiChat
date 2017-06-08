@@ -7,9 +7,12 @@
 #include "simplecrypt.h"
 #include <QString>
 
+<<<<<<< HEAD
 
 
 QString userID;
+=======
+>>>>>>> 98f347bf4913088a2ee398d19c363c520bce1737
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow)
 {
 
@@ -31,6 +34,21 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     connect(user->getSocket(), SIGNAL(disconnected()), this, SLOT(onDisconnected()));
     user->getSocket()->connectToHost("127.0.0.1",1234);
 
+<<<<<<< HEAD
+=======
+    // libgtk2.0-dev and libpulse-dev package should be installed
+    QMediaPlaylist *bgm = new QMediaPlaylist();
+    bgm->addMedia(QUrl("qrc:/sound/bgm.wav"));
+    bgm->setPlaybackMode(QMediaPlaylist::Loop);
+    QMediaContent noti(QUrl("qrc:/sound/noti.wav"));
+
+    _bgm = new QMediaPlayer;
+    _noti = new QMediaPlayer;
+    _bgm->setPlaylist(bgm);
+    _noti->setMedia(noti);
+    _bgm->play();
+    //BGM.play("qrc:/sound/noti.wav");
+>>>>>>> 98f347bf4913088a2ee398d19c363c520bce1737
 }
 
 MainWindow::~MainWindow() {
@@ -49,8 +67,7 @@ void MainWindow::on_pbLogin_clicked() {
                                  QMessageBox::Ok);
         return;
     }
-    userID=userName;
-
+    user->setUserID(userName);
 
     QString userPW = ui->lePW->text().trimmed();
     if (userPW.isEmpty()) {
@@ -70,8 +87,8 @@ void MainWindow::on_pbLogin_clicked() {
 void MainWindow::on_pbSend_clicked() {
     QString message = ui->leMessage->text().trimmed();
     if (!message.isEmpty()) {
- QString sNumber = QString::number(user->getRoomNumber());
-        user->getSocket()->write(QString(sNumber + ":" +userID+":"+ "/say:" + message + "\n").toUtf8());
+    QString sNumber = QString::number(user->getRoomNumber());
+        user->getSocket()->write(QString(sNumber + ":" +user->getUserID()+":"+ "/say:" + message + "\n").toUtf8());
         //user->getSocket()->write(QString("/say:" + message + "\n").toUtf8());
         ui->leMessage->clear();
         ui->leMessage->setFocus();
@@ -82,7 +99,7 @@ void MainWindow::onReadyRead() {
     qDebug()<<"readyreadon";
     QRegExp numberRex("^(.*):([0-9])$"); //client'snumber
     QRegExp usersRex("^/users:(.*)$");
-    QRegExp systemRex("^(.*):(.*):/system:(.*)$");
+    QRegExp systemRex("^(.*):(.*):/system:(.*):(.*)$");
     QRegExp messageRex("^(.*):(.*):(.*)$");
     //QRegExp messageRex("^(.*):(.*)$");
     QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
@@ -110,21 +127,25 @@ void MainWindow::onReadyRead() {
             }
 
         else if (systemRex.indexIn(line) != -1) {
-            QString menNum = systemRex.cap(1);
+            QString peopleNum = systemRex.cap(1);
             QString roomNum = systemRex.cap(2);
-            QString msg = systemRex.cap(3);
+            QString userName = systemRex.cap(3);
+            QString msg = systemRex.cap(4);
             qDebug()<<roomNum.toInt()<<msg;
-            if(user->getRoomNumber() == roomNum.toInt() && menNum == 1){
-                ui->teChat->append("<p color=\"gray\">" + msg + "</p>\n");
+            if(user->getRoomNumber() == roomNum.toInt() && peopleNum.toInt() != 1){
+                if(userName != user->getUserID())
+                ui->teChat->append("<p color=\"red\">" + userName +" "+ msg + "</p>\n");
             }
         }
         else if (messageRex.indexIn(line) != -1) {
                     QString curNumber = messageRex.cap(1);
                     if(user->getRoomNumber() == curNumber.toInt()){
                         qDebug() << "숫자 변환 테스트: " <<sNumber.toInt();
-                        QString user = messageRex.cap(2);
+                        QString msgUser = messageRex.cap(2);
                         QString message = messageRex.cap(3);
-                        ui->teChat->append("<p><b>" + user + "</b>: " + message + "</p>\n");
+                        ui->teChat->append("<p><b>" + msgUser + "</b>: " + message + "</p>\n");
+                        if(user->getUserID() != msgUser)
+                        _noti->play();
                     }
         }
 /*
@@ -137,7 +158,7 @@ void MainWindow::onReadyRead() {
         if(loginAcceptRex.indexIn(line)!=-1){
             QString loginA=loginAcceptRex.cap(1);
 
-            if(!userID.compare(loginA)){
+            if(!user->getUserID().compare(loginA)){
                 qDebug()<<"here3"<<endl;
                  ui->teChat->clear();
                  ui->stackedWidget->setCurrentWidget(ui->chatPage);
@@ -159,9 +180,14 @@ void MainWindow::onConnected() {
 void MainWindow::onDisconnected() {
     QMessageBox::warning(NULL, "Warning",
                         "check ID or PW", QMessageBox::Ok);
+<<<<<<< HEAD
   ui->stackedWidget->setCurrentWidget(ui->loginPage);
  user->getSocket()->connectToHost("127.0.0.1",1234);
 
+=======
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+    user->getSocket()->connectToHost("127.0.0.1",1234);
+>>>>>>> 98f347bf4913088a2ee398d19c363c520bce1737
 }
 
 
