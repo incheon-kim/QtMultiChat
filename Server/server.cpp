@@ -59,7 +59,6 @@ void Server::onDisconnect() {
          QVector<Room>::iterator iter;
          userInfo temp;
          temp=clients[socket];
-    qDebug()<<"userGender"<<temp.userSex;
     if(!manager->isEmpty()){            
         for(iter=manager->beginIterator();iter!=manager->endItertor();++iter)
         {
@@ -138,7 +137,6 @@ void Server::onReadyRead() {
             QString enpw;
             QString query="SELECT PW FROM usrInfo WHERE ID=\'"+userID+"\'";
             QString query2="SELECT Gender FROM usrInfo WHERE ID=\'"+userID+"\'";
-             qDebug()<<"q sc"<<endl;
             if(q.exec(query)){
                 if(q.next()){
                     QSqlRecord rr=q.record();
@@ -149,14 +147,11 @@ void Server::onReadyRead() {
                         qDebug()<<"login fail";
                         socket->disconnectFromHost();
                     }
-                    qDebug()<<"q1 sc"<<endl;
                     q.exec(query2);
                     if(q.next()) {
-                         qDebug()<<"q2 sc"<<endl;
                         QSqlRecord record = q.record();
                         int gender =q.record().indexOf("Gender");
                         int gender_temp = q.value(gender).toInt();
-                        qDebug() << "gender : " << gender_temp;
                         userInfo temp;
                         temp=clients[socket];
                         temp.userName=userID;
@@ -171,15 +166,13 @@ void Server::onReadyRead() {
                 int roomPeople=0;
                 bool enter=false;
 
-                qDebug()<<"ID"<<clients[socket].userName;
-                qDebug()<<"Gender"<<clients[socket].userSex;
-                qDebug()<<"roomNumber"<<clients[socket].roomNumber;
+
 
                 QVector<Room>::iterator iter;
 
                    if(!manager->isEmpty())
                    {       
-                       qDebug()<<"test1";
+
                        for(iter=manager->beginIterator();iter!=manager->endItertor();++iter)
                        {
                            if((*iter).getPeople()<2)
@@ -226,7 +219,7 @@ void Server::onReadyRead() {
                        {
                            (*getRoom).enter();
                            (*getRoom).enterMale();
-                           qDebug()<<"ENter Male";
+                           qDebug()<<"Enter Male";
                            qDebug()<<"roomPeople"<<(*getRoom).getPeople();
                            roomPeople = (*getRoom).getPeople();
                            qDebug()<<"enter Room"<<roomNumber;
@@ -236,7 +229,7 @@ void Server::onReadyRead() {
 
                            (*getRoom).enter();
                            (*getRoom).enterFemale();
-                           qDebug()<<"ENter Female";
+                           qDebug()<<"Enter Female";
                            qDebug()<<"roomPeople"<<(*getRoom).getPeople();
                            roomPeople = (*getRoom).getPeople();
                            qDebug()<<"enter Room"<<roomNumber;
@@ -247,14 +240,10 @@ void Server::onReadyRead() {
                 info=clients[socket];
                 info.roomNumber=roomNumber;
                 clients.insert(socket,info);
-                qDebug()<<"ID"<<clients[socket].userName;
-                qDebug()<<"Gender"<<clients[socket].userSex;
-                qDebug()<<"roomNumber"<<clients[socket].roomNumber;
 
                 QString setClientRoomNumber = QString::number(roomNumber); //tmp is client's room_no
                 sendToAll(QString(number + ":" + setClientRoomNumber + "\n")); //send to connected client
 
-                qDebug()<<"sendingtest";
                 // 상대방 접속 메세지
                 sendToAll(QString((QString::number(roomPeople))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+clients[socket].userName+":"+"님이 접속했습니다.\n"));
                 }
