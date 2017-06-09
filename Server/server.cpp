@@ -35,13 +35,6 @@ Server::~Server(){
     myDB.close();
 
 }
-void Server::sendUserList()
-{
-    //????dont' know how to handle values
-        //QString line = "/users:" + clients.values().join(',') + "\n";
-    //sendToAll(line);
-}
-
 
 void Server::sendToAll(const QString& msg) {
     foreach (QTcpSocket* socket, clients.keys()) {
@@ -62,56 +55,48 @@ void Server::onDisconnect() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     qDebug() << "Client disconnected: " << socket->peerAddress().toString();
 
-
     int compareRoomNumber=1;
          QVector<Room>::iterator iter;
          userInfo temp;
          temp=clients[socket];
     qDebug()<<"userGender"<<temp.userSex;
-    if(!manager->isEmpty())
-         {
-
-             for(iter=manager->beginIterator();iter!=manager->endItertor();++iter)
-             {
-                 if(compareRoomNumber==temp.roomNumber)
-                 {
-                     if(temp.userSex==0){
-                     (*iter).out();
-                     (*iter).outMale();
-                          qDebug()<<"Male left the room";
-                     qDebug()<<"roomPeople"<<(*iter).getPeople();
-                     qDebug()<<"roomNumber"<<temp.roomNumber;
-                     break;
-                     }
-                     else
-                     {
-                         (*iter).out();
-                         (*iter).outFemale();
-                         qDebug()<<"Female left the room";
-                         qDebug()<<"roomPeople"<<(*iter).getPeople();
-                         qDebug()<<"roomNumber"<<temp.roomNumber;
-                         break;
-                     }
+    if(!manager->isEmpty()){            
+        for(iter=manager->beginIterator();iter!=manager->endItertor();++iter)
+        {
+            if(compareRoomNumber==temp.roomNumber)
+            {
+                if(temp.userSex==0){
+                    (*iter).out();
+                    (*iter).outMale();
+                    qDebug()<<"Male left the room";
+                    qDebug()<<"roomPeople"<<(*iter).getPeople();
+                    qDebug()<<"roomNumber"<<temp.roomNumber;
+                    break;
+                }
+                else
+                {
+                    (*iter).out();
+                    (*iter).outFemale();
+                    qDebug()<<"Female left the room";
+                    qDebug()<<"roomPeople"<<(*iter).getPeople();
+                    qDebug()<<"roomNumber"<<temp.roomNumber;
+                    break;
                  }
-                 compareRoomNumber++;
+          }
+            compareRoomNumber++;
     }
-
-
     QString username = clients.value(socket).userName;
     sendToAll(QString(QString::number(0)+":"+QString::number(temp.roomNumber)+":"+"/system:"+username+":"+"님이 나갔습니다.\n"));
     clients.remove(socket);
-    sendUserList();
-}
+    }
 }
 
 //  /makegender:([0-1])
 void Server::onReadyRead() {
     QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
-    //QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
     QRegExp tokRex("^/email:(.*)/Token:(.*)$");
     QRegExp loginRex("^/userID:(.*)/userPW:(.*)$");
     QRegExp messageRex("^(.*):(.*):/say:(.*)$");
-
     QSqlQuery q(myDB);
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
@@ -124,7 +109,7 @@ void Server::onReadyRead() {
             QString email=signupRex.cap(3);
             QString gen = signupRex.cap(4);
             QString enable ="1";
-            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"\'\,\'"+enpw+"\'\,"+gen+"\,"+enable+")";
+            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"',\'"+enpw+","+gen+","+enable+")";
             qDebug()<<query;
             QString query2="INSERT INTO usrE (ID,Email) VALUES('"+id+"','"+email+"')";
             q.prepare(query);
@@ -143,7 +128,7 @@ void Server::onReadyRead() {
             else{
                 qDebug()<<q.lastError();
             }
-            }
+        }
 
         if (loginRex.indexIn(line) != -1) {
 
@@ -154,7 +139,6 @@ void Server::onReadyRead() {
             QString query="SELECT PW FROM usrInfo WHERE ID=\'"+userID+"\'";
             QString query2="SELECT Gender FROM usrInfo WHERE ID=\'"+userID+"\'";
              qDebug()<<"q sc"<<endl;
-             int gender_temp;
             if(q.exec(query)){
                 if(q.next()){
                     QSqlRecord rr=q.record();
@@ -179,9 +163,6 @@ void Server::onReadyRead() {
                         temp.userSex=gender_temp;
                         clients.insert(socket,temp);
                     }
-
-                //sendToAll(QString("/system:" + userID + " has joined the chat.\n"));
-                sendUserList();
                 qDebug() << userID << "logged in.";
 
                 sendToAll(QString("/LoginSuccess:"+userID+"\n"));
@@ -194,12 +175,11 @@ void Server::onReadyRead() {
                 qDebug()<<"Gender"<<clients[socket].userSex;
                 qDebug()<<"roomNumber"<<clients[socket].roomNumber;
 
-
                 QVector<Room>::iterator iter;
 
                    if(!manager->isEmpty())
-                   {
-                        qDebug()<<"test1";
+                   {       
+                       qDebug()<<"test1";
                        for(iter=manager->beginIterator();iter!=manager->endItertor();++iter)
                        {
                            if((*iter).getPeople()<2)
@@ -229,8 +209,8 @@ void Server::onReadyRead() {
                                    qDebug()<<"roomPeople"<<(*iter).getPeople();
                                    roomPeople = (*iter).getPeople();
                                    qDebug()<<"roomNumber"<<roomNumber;
-                                   break;
-                             }
+                                   break;                               
+                               }
                            }
                            roomNumber++;
                        }
@@ -239,7 +219,7 @@ void Server::onReadyRead() {
                    if(enter==false)
                    {
 
-                         qDebug()<<"usersex"<<clients[socket].userSex;
+                       qDebug()<<"usersex"<<clients[socket].userSex;
                        manager->createRoom();
                        QVector<Room>::iterator getRoom= manager->lastIter();
                        if(clients[socket].userSex==0)
@@ -262,8 +242,7 @@ void Server::onReadyRead() {
                            qDebug()<<"enter Room"<<roomNumber;
 
                        }
-               }
-
+                    }
                 userInfo info;
                 info=clients[socket];
                 info.roomNumber=roomNumber;
@@ -280,12 +259,11 @@ void Server::onReadyRead() {
                 sendToAll(QString((QString::number(roomPeople))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+clients[socket].userName+":"+"님이 접속했습니다.\n"));
                 }
 
-                else{
+                else{ //로그인 승인불가!
                     qDebug()<<"login fail";
                     socket->disconnectFromHost();
-                }     //로그인 승인불가!
+                }
             }
-
         }
 
         else if (messageRex.indexIn(line) != -1) {
@@ -297,10 +275,6 @@ void Server::onReadyRead() {
             qDebug() << "User:" << user<< "Message:" << msg;
         }
 
-
-
-
-
         else if(tokRex.indexIn(line)!=-1){
             QString userEmail=tokRex.cap(1); //이메일인증 버튼을 누른 클라이언트의 이메일주소
             QString Token=tokRex.cap(2); // 클라이언트의 이메일로 전송할 토큰값.
@@ -308,9 +282,7 @@ void Server::onReadyRead() {
             qDebug()<<Token<<endl<<userEmail;
             sendMail(Token, userEmail);
         }
-
-
-                }
+    }
 }
 void Server::sendMail(QString Token, QString Destination){
     // 정보
@@ -320,7 +292,6 @@ void Server::sendMail(QString Token, QString Destination){
     QString Title = "동동주 인증메일 입니다.";
     QString body = "안녕하세요, 동동주 입니다.\n인증번호는 : ";
     body = body +Token+" 입니다. 감사합니다.";
-
     Smtp* smtp = new Smtp(admin.toUtf8(),pwd.toUtf8(),host.toUtf8(),465);
     connect(smtp, SIGNAL(status(QString)), this, SLOT(mailSent(QString)));
     smtp->sendMail(admin, Destination, Title.toUtf8(), body.toUtf8());

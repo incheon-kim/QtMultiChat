@@ -26,7 +26,6 @@ typedef struct
     int userSex =-1;
     int roomNumber=-1;
 }userInfo;
-
 //man 0 female 1
 
 class Server : QObject {

@@ -13,10 +13,13 @@ public:
     QTcpSocket *getSocket();
     void setUserID(QString name);
     QString getUserID();
+    void setLoginFlag(bool flag);
+    bool getLoginFlag();
 private:
     QTcpSocket *socket;
     int clientRoomNumber; //client's own number;
     QString userID;
+    bool loginFlag = false;
 };
 
 #endif // USER_H

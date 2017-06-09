@@ -13,8 +13,6 @@ QString userID;
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow)
 {
-
-
     ui->setupUi(this);
     setCentralWidget(ui->mainFrame);
     connect(ui->leID, SIGNAL(returnPressed()), this, SLOT(on_pbLogin_clicked()));
@@ -53,9 +51,6 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::on_pbLogin_clicked() {
-
-
-
     QString userName = ui->leID->text().trimmed();
     if (userName.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
@@ -92,7 +87,7 @@ void MainWindow::on_pbSend_clicked() {
 }
 
 void MainWindow::onReadyRead() {
-    qDebug()<<"readyreadon";
+    user->setLoginFlag(true);
     QRegExp numberRex("^(.*):([0-9])$"); //client'snumber
     QRegExp usersRex("^/users:(.*)$");
     QRegExp systemRex("^(.*):(.*):/system:(.*):(.*)$");
@@ -106,10 +101,8 @@ void MainWindow::onReadyRead() {
         if(numberRex.indexIn(line) != -1)
                 { //클라이언트에 번호 부여
                     sNumber = numberRex.cap(2);
-                    if(user->getRoomNumber() == 0) //set client's room number;
-                    {
+                    if(user->getRoomNumber() == 0){ //set client's room number;
                         user->setRoomNumber(sNumber.toInt());
-
                     }
         }
         else if (usersRex.indexIn(line) != -1) {
@@ -118,15 +111,12 @@ void MainWindow::onReadyRead() {
             foreach (QString user, users) {
                  new QListWidgetItem(QIcon(":/user.png"), user, ui->lwUsers);
             }
-
-            }
-
+        }
         else if (systemRex.indexIn(line) != -1) {
             QString peopleNum = systemRex.cap(1);
             QString roomNum = systemRex.cap(2);
             QString userName = systemRex.cap(3);
             QString msg = systemRex.cap(4);
-            qDebug()<<roomNum.toInt()<<msg;
             if(user->getRoomNumber() == roomNum.toInt() && peopleNum.toInt() != 1){
                 if(userName != user->getUserID())
                 ui->teChat->append("<p color=\"red\">" + userName +" "+ msg + "</p>\n");
@@ -135,7 +125,6 @@ void MainWindow::onReadyRead() {
         else if (messageRex.indexIn(line) != -1) {
                     QString curNumber = messageRex.cap(1);
                     if(user->getRoomNumber() == curNumber.toInt()){
-                        qDebug() << "숫자 변환 테스트: " <<sNumber.toInt();
                         QString msgUser = messageRex.cap(2);
                         QString message = messageRex.cap(3);
                         ui->teChat->append("<p><b>" + msgUser + "</b>: " + message + "</p>\n");
@@ -143,14 +132,7 @@ void MainWindow::onReadyRead() {
                         _noti->play();
                     }
         }
-/*
-        else if (messageRex.indexIn(line) != -1) {
-            QString user = messageRex.cap(1);
-            QString message = messageRex.cap(2);
-            ui->teChat->append("<p><b>" + user + "</b>: " + message + "</p>\n");
-        }
-*/
-        if(loginAcceptRex.indexIn(line)!=-1){
+        if(loginAcceptRex.indexIn(line)!=-1) {
             QString loginA=loginAcceptRex.cap(1);
 
             if(!user->getUserID().compare(loginA)){
@@ -158,10 +140,9 @@ void MainWindow::onReadyRead() {
                  ui->stackedWidget->setCurrentWidget(ui->chatPage);
                  ui->leMessage->setFocus();
             }
-
+        }
     }
 
-    }
 }
 
 void MainWindow::onConnected() {
@@ -169,22 +150,18 @@ void MainWindow::onConnected() {
 }
 
 
-    //login fail
-
+//login fail
 void MainWindow::onDisconnected() {
-    QMessageBox::warning(NULL, "Warning",
-                        "check ID or PW", QMessageBox::Ok);
-
-  ui->stackedWidget->setCurrentWidget(ui->loginPage);
- user->getSocket()->connectToHost("127.0.0.1",1234);
-
-
+    qDebug() << user->getLoginFlag();
+    if(!user->getLoginFlag()){
+        QMessageBox::warning(NULL, "알림",
+                            "아이디 또는 비밀번호를 확인해 주세요.", QMessageBox::Ok);
+    }
+    ui->stackedWidget->setCurrentWidget(ui->loginPage);
+    user->getSocket()->connectToHost("127.0.0.1",1234);
 }
 
-
-void MainWindow::on_pbSignup_clicked ()
-{
-
+void MainWindow::on_pbSignup_clicked (){
     dlsignin form;
     form.setSocket(user->getSocket());
     form.setModal(true);
