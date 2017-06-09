@@ -2,5 +2,6 @@
     <qresource prefix="/sound">
         <file>bgm.wav</file>
         <file>noti.wav</file>
+        <file>login.wav</file>
     </qresource>
 </RCC>

@@ -33,11 +33,16 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     bgm->addMedia(QUrl("qrc:/sound/bgm.wav"));
     bgm->setPlaybackMode(QMediaPlaylist::Loop);
     QMediaContent noti(QUrl("qrc:/sound/noti.wav"));
+    QMediaContent login(QUrl("qrc:/sound/login.wav"));
 
     _bgm = new QMediaPlayer;
     _noti = new QMediaPlayer;
+    _login = new QMediaPlayer;
+
     _bgm->setPlaylist(bgm);
     _noti->setMedia(noti);
+    _login->setMedia(login);
+
     _bgm->play();
     //BGM.play("qrc:/sound/noti.wav");
 }
@@ -64,6 +69,9 @@ void MainWindow::on_pbLogin_clicked() {
                                  QMessageBox::Ok);
         return;
     }
+    if(user->getLoginFlag() == false){
+        user->setLoginFlag(true);
+    }
     SimpleCrypt crypto;
     crypto.setKey(0x0c2ad4a4acb9f023);
     QString cpw=crypto.encryptToString(userPW);
@@ -84,13 +92,21 @@ void MainWindow::on_pbSend_clicked() {
 }
 
 void MainWindow::onReadyRead() {
-    user->setLoginFlag(true);
+    if(loginSoundFlag == true){
+        _login->play();
+        this->loginSoundFlag = false;
+    }
     QRegExp numberRex("^(.*):([0-9])$"); //client'snumber
     QRegExp usersRex("^/users:(.*)$");
     QRegExp systemRex("^(.*):(.*):/system:(.*):(.*)$");
     QRegExp messageRex("^(.*):(.*):(.*)$");
     //QRegExp messageRex("^(.*):(.*)$");
     QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
+
+    //check if user just exit or disconnected by server.
+    if(user->getSocket()->canReadLine() == true && user->getLoginFlag() == true){
+        user->setLoginFlag(false);
+    }
 
     while (user->getSocket()->canReadLine()) {
         QString sNumber;
@@ -139,7 +155,6 @@ void MainWindow::onReadyRead() {
             }
         }
     }
-
 }
 
 void MainWindow::onConnected() {
@@ -149,10 +164,10 @@ void MainWindow::onConnected() {
 
 //login fail
 void MainWindow::onDisconnected() {
-    qDebug() << user->getLoginFlag();
-    if(!user->getLoginFlag()){
+    if(user->getLoginFlag()){
         QMessageBox::warning(NULL, "알림",
                             "아이디 또는 비밀번호를 확인해 주세요.", QMessageBox::Ok);
+        user->setLoginFlag(false);
     }
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
     user->getSocket()->connectToHost("127.0.0.1",1234);
@@ -163,7 +178,5 @@ void MainWindow::on_pbSignup_clicked (){
     form.setSocket(user->getSocket());
     form.setModal(true);
     form.exec();
-
-
 }
 

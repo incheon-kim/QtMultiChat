@@ -23,6 +23,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     QMediaPlayer* _bgm;
     QMediaPlayer* _noti;
+    QMediaPlayer* _login;
     ~MainWindow();
 public slots:
     void on_pbLogin_clicked();
@@ -38,6 +39,7 @@ private:
     QTcpSocket *socket;
     User *user;
     int clientRoomNumber=0;
+    bool loginSoundFlag = true;
 };
 
 

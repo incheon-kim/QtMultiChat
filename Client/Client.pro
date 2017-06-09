@@ -34,3 +34,5 @@ FORMS    += \
 RESOURCES += \
     icons.qrc \
     sound.qrc
+
+DISTFILES +=
