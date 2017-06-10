@@ -8,6 +8,8 @@
 #include <QMediaPlaylist>
 #include "dlsignin.h"
 #include "user.h"
+
+#define HOST "127.0.0.1"
 #define PORT 1234
 
 

@@ -21,14 +21,13 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     ui->leID->setValidator(new QRegExpValidator(regex, this));
 
     user=new User(new QTcpSocket(this));
-    //socket = new QTcpSocket(this);
     connect(user->getSocket(), SIGNAL(connected()), this, SLOT(onConnected()));
     connect(user->getSocket(), SIGNAL(readyRead()), this, SLOT(onReadyRead()));
     connect(user->getSocket(), SIGNAL(disconnected()), this, SLOT(onDisconnected()));
-    user->getSocket()->connectToHost("127.0.0.1",1234);
+    user->getSocket()->connectToHost(HOST, PORT);
 
 
-    // libgtk2.0-dev and libpulse-dev package should be installed
+    // libgtk2.0-dev and libpulse-dev package should be installed to play
     QMediaPlaylist *bgm = new QMediaPlaylist();
     bgm->addMedia(QUrl("qrc:/sound/bgm.wav"));
     bgm->setPlaybackMode(QMediaPlaylist::Loop);
@@ -44,7 +43,6 @@ MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWin
     _login->setMedia(login);
 
     _bgm->play();
-    //BGM.play("qrc:/sound/noti.wav");
 }
 
 MainWindow::~MainWindow() {
@@ -54,12 +52,14 @@ MainWindow::~MainWindow() {
 
 void MainWindow::on_pbLogin_clicked() {
     QString userName = ui->leID->text().trimmed();
+    // id input error
     if (userName.isEmpty()) {
         QMessageBox::information(NULL, "Warning",
                                  "아이디를 입력해 주세요.",
                                  QMessageBox::Ok);
         return;
     }
+    //store user identification information
     user->setUserID(userName);
 
     QString userPW = ui->lePW->text().trimmed();
@@ -72,6 +72,7 @@ void MainWindow::on_pbLogin_clicked() {
     if(user->getLoginFlag() == false){
         user->setLoginFlag(true);
     }
+    // encrypt user's passwd
     SimpleCrypt crypto;
     crypto.setKey(0x0c2ad4a4acb9f023);
     QString cpw=crypto.encryptToString(userPW);
@@ -96,11 +97,11 @@ void MainWindow::onReadyRead() {
         _login->play();
         this->loginSoundFlag = false;
     }
+    // regular expression to extract information from string sent by server
     QRegExp numberRex("^(.*):([0-9])$"); //client'snumber
     QRegExp usersRex("^/users:(.*)$");
     QRegExp systemRex("^(.*):(.*):/system:(.*):(.*)$");
     QRegExp messageRex("^(.*):(.*):(.*)$");
-    //QRegExp messageRex("^(.*):(.*)$");
     QRegExp loginAcceptRex("^/LoginSuccess:(.*)$");
 
     //check if user just exit or disconnected by server.
@@ -108,6 +109,7 @@ void MainWindow::onReadyRead() {
         user->setLoginFlag(false);
     }
 
+    // extract info from string
     while (user->getSocket()->canReadLine()) {
         QString sNumber;
         QString line = QString::fromUtf8(user->getSocket()->readLine()).trimmed();
@@ -125,6 +127,7 @@ void MainWindow::onReadyRead() {
                  new QListWidgetItem(QIcon(":/user.png"), user, ui->lwUsers);
             }
         }
+        // user in / out msg
         else if (systemRex.indexIn(line) != -1) {
             QString peopleNum = systemRex.cap(1);
             QString roomNum = systemRex.cap(2);
@@ -135,6 +138,7 @@ void MainWindow::onReadyRead() {
                 ui->teChat->append("<p color=\"red\">" + userName +" "+ msg + "</p>\n");
             }
         }
+        // msg from user
         else if (messageRex.indexIn(line) != -1) {
                     QString curNumber = messageRex.cap(1);
                     if(user->getRoomNumber() == curNumber.toInt()){
@@ -170,7 +174,7 @@ void MainWindow::onDisconnected() {
         user->setLoginFlag(false);
     }
     ui->stackedWidget->setCurrentWidget(ui->loginPage);
-    user->getSocket()->connectToHost("127.0.0.1",1234);
+    user->getSocket()->connectToHost(HOST, PORT);
 }
 
 void MainWindow::on_pbSignup_clicked (){

@@ -2,7 +2,16 @@
 #define DLSIGNIN_H
 
 #include <QDialog>
+#include <QMessageBox>
+#include <QDebug>
+#include <QString>
+
 #include <QTcpSocket>
+#include <QCryptographicHash>
+
+#include "simplecrypt.h"
+#include "mainwindow.h"
+
 namespace Ui {
 class dlsignin;
 }

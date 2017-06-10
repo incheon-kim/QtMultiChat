@@ -1,19 +1,14 @@
 #include "dlsignin.h"
 #include "ui_dlsignin.h"
-#include <QMessageBox>
-#include <QCryptographicHash>
-#include "simplecrypt.h"
-#include <QString>
-#include <QDebug>
 
 dlsignin::dlsignin(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dlsignin)
 {
-    qDebug()<<"dlsignin working";
+    qDebug()<<"Dialog for Sign up";
     ui->setupUi(this);
     connect(socket , SIGNAL(connected()), this, SLOT(onConnected()));
-    socket->connectToHost("127.0.0.1",1234);
+    socket->connectToHost(HOST, PORT);
 }
 
 dlsignin::~dlsignin()
@@ -74,7 +69,7 @@ void dlsignin::on_pbSignupform_clicked()
 
     }
 
-    //encryption
+    // Password Encryption
     SimpleCrypt crypto;
     crypto.setKey(0x0c2ad4a4acb9f023);
     QString enpw=crypto.encryptToString(makepw);
@@ -94,7 +89,7 @@ void dlsignin::on_pbSignupform_clicked()
         }
     }
     qDebug()<<token<<endl;
-    qDebug()<<(token==tokenCheck);
+    qDebug()<<"token check result : " << (token==tokenCheck);
     if(token!=tokenCheck){
         QMessageBox::information(NULL, "Warning",
                                  "인증번호가 일치하지 않습니다.",

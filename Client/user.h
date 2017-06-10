@@ -8,17 +8,20 @@ class User
 public:
     User();
     User(QTcpSocket *socket);
+
+    // SETTER
+    void setUserID(QString name);
     void setRoomNumber(int clientRoomNumber);
+    void setLoginFlag(bool flag);
+    // GETTER
     int getRoomNumber();
     QTcpSocket *getSocket();
-    void setUserID(QString name);
     QString getUserID();
-    void setLoginFlag(bool flag);
     bool getLoginFlag();
 private:
     QTcpSocket *socket;
-    int clientRoomNumber; //client's own number;
     QString userID;
+    int clientRoomNumber; //client's own number;
     bool loginFlag = false;
 };
 

@@ -1,7 +1,5 @@
 #include "server.h"
-#include <QString>
-#include <QRegExp>
-#include <QSqlRecord>
+
 #define Path_to_DB "../db/ddj.db"  //db path
 
 Server::Server(QObject* parent) : QObject(parent) {
@@ -90,7 +88,6 @@ void Server::onDisconnect() {
     }
 }
 
-//  /makegender:([0-1])
 void Server::onReadyRead() {
     QRegExp signupRex("^/makeID:(.*)/makepw:(.*)/makeemail:(.*)/makegender:([0-1])$");
     QRegExp tokRex("^/email:(.*)/Token:(.*)$");
@@ -100,9 +97,9 @@ void Server::onReadyRead() {
     QTcpSocket* socket = (QTcpSocket*)sender();
     while (socket->canReadLine()) {
         QString line = QString::fromUtf8(socket->readLine()).trimmed();
-        qDebug()<<line;
+        qDebug()<< endl <<"string from client" << line<<endl;
         if(signupRex.indexIn(line) != -1){ //회원가입
-            qDebug()<<"enterd signupRex";
+            qDebug()<<"--Signup--";
             QString id=signupRex.cap(1);
             QString enpw=signupRex.cap(2);
             QString email=signupRex.cap(3);
@@ -112,13 +109,12 @@ void Server::onReadyRead() {
             qDebug()<<query;
             QString query2="INSERT INTO usrE (ID,Email) VALUES('"+id+"','"+email+"')";
             q.prepare(query);
-            qDebug()<<"signupform data came to server";
             if(q.exec(query)){
-                qDebug()<<"q1 ok";
+                qDebug()<<"User information insert Query executed";
                     q.prepare(query2);
                     if(q.exec(query2)){
 
-                             qDebug() << id << "signed up!.";
+                             qDebug() << id << "Sign up procedure completed"<<endl;
                   }
                     else{
                         qDebug()<<q.lastError();
@@ -139,7 +135,6 @@ void Server::onReadyRead() {
             QString query2="SELECT Gender FROM usrInfo WHERE ID=\'"+userID+"\'";
             if(q.exec(query)){
                 if(q.next()){
-                    QSqlRecord rr=q.record();
                     int dc=q.record().indexOf("PW");
                     QString dcp = q.value(dc).toString();
                     enpw=crypto.decryptToString(dcp);
@@ -147,9 +142,10 @@ void Server::onReadyRead() {
                         qDebug()<<"login fail";
                         socket->disconnectFromHost();
                     }
+                    qDebug()<<"Login Query 1 completed"<<endl;
                     q.exec(query2);
                     if(q.next()) {
-                        QSqlRecord record = q.record();
+                        qDebug()<<"Login Query 2 completed"<<endl;
                         int gender =q.record().indexOf("Gender");
                         int gender_temp = q.value(gender).toInt();
                         userInfo temp;
@@ -177,7 +173,7 @@ void Server::onReadyRead() {
                        {
                            if((*iter).getPeople()<2)
                            {
-                               qDebug()<<"usersex"<<clients[socket].userSex;
+                               qDebug()<<"userGender"<<clients[socket].userSex;
                                if(clients[socket].userSex==0 && (*iter).needMale())
                                {
                                    (*iter).enter();
@@ -212,7 +208,7 @@ void Server::onReadyRead() {
                    if(enter==false)
                    {
 
-                       qDebug()<<"usersex"<<clients[socket].userSex;
+                       qDebug()<<"userGender"<<clients[socket].userSex;
                        manager->createRoom();
                        QVector<Room>::iterator getRoom= manager->lastIter();
                        if(clients[socket].userSex==0)
@@ -241,8 +237,8 @@ void Server::onReadyRead() {
                 info.roomNumber=roomNumber;
                 clients.insert(socket,info);
 
-                QString setClientRoomNumber = QString::number(roomNumber); //tmp is client's room_no
-                sendToAll(QString(number + ":" + setClientRoomNumber + "\n")); //send to connected client
+                // send room number info to user
+                sendToAll(QString(number + ":" + QString::number(roomNumber) + "\n")); //send to connected client
 
                 // 상대방 접속 메세지
                 sendToAll(QString((QString::number(roomPeople))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+clients[socket].userName+":"+"님이 접속했습니다.\n"));
@@ -256,12 +252,12 @@ void Server::onReadyRead() {
         }
 
         else if (messageRex.indexIn(line) != -1) {
-            QString num = messageRex.cap(1);
-           QString user = messageRex.cap(2);
+            QString roomNum = messageRex.cap(1);
+            QString userName = messageRex.cap(2);
             QString msg = messageRex.cap(3);
-            qDebug() << "넘버링 테스트: "<<num;
-            sendToAll(QString( num + ":"+ user +":"+ msg + "\n"));
-            qDebug() << "User:" << user<< "Message:" << msg;
+            sendToAll(QString( roomNum + ":"+ userName +":"+ msg + "\n"));
+            qDebug() << "From Room number --> " << roomNum;
+            qDebug() << "User:" << userName << "Message:" << msg;
         }
 
         else if(tokRex.indexIn(line)!=-1){
@@ -274,13 +270,21 @@ void Server::onReadyRead() {
     }
 }
 void Server::sendMail(QString Token, QString Destination){
-    // 정보
+    // information to access smtp server
+
+    // full address of account
     QString admin = "masterofddj@gmail.com";
+    // passwd of account
     QString pwd = "qwerty1995";
+    // hostname of gmail server
     QString host = "smtp.gmail.com";
+    // title of email
     QString Title = "동동주 인증메일 입니다.";
+    // body of email
     QString body = "안녕하세요, 동동주 입니다.\n인증번호는 : ";
-    body = body +Token+" 입니다. 감사합니다.";
+    body = body + Token + " 입니다. 감사합니다.";
+
+    // address, passwrod, hostname, port(gmail uses 465 for TLS)
     Smtp* smtp = new Smtp(admin.toUtf8(),pwd.toUtf8(),host.toUtf8(),465);
     connect(smtp, SIGNAL(status(QString)), this, SLOT(mailSent(QString)));
     smtp->sendMail(admin, Destination, Title.toUtf8(), body.toUtf8());

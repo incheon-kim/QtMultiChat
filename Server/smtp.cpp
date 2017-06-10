@@ -7,8 +7,6 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*/
 
-
-
 #include "smtp.h"
 
 Smtp::Smtp( const QString &user, const QString &pass, const QString &host, int port, int timeout )
@@ -28,12 +26,11 @@ Smtp::Smtp( const QString &user, const QString &pass, const QString &host, int p
     this->host = host;
     this->port = port;
     this->timeout = timeout;
-
-
 }
 
 void Smtp::sendMail(const QString &from, const QString &to, const QString &subject, const QString &body)
 {
+    qDebug()<<"------------------Email send procedure started------------------";
     QString randString = this->setRandomString();
     QString bodyy = body;
     bodyy = bodyy.remove(QRegExp("<[^>]*>"));
@@ -42,6 +39,7 @@ void Smtp::sendMail(const QString &from, const QString &to, const QString &subje
     message.append("From: " + from + "\n");
     message.append("Subject: " + subject + "\n");
 
+    // add data about UTF-8 encoding(for hangul)
     /*---------------------------------------------------------------------------*/
     // -- Let's intitiate multipart MIME with cutting boundary "boundary"
     message.append("MIME-Version: 1.0");
@@ -105,6 +103,7 @@ void Smtp::disconnected()
 
     qDebug() <<"disconneted";
     qDebug() << "error "  << socket->errorString();
+    qDebug()<<"------------------Email send procedure finished------------------";
 }
 
 void Smtp::connected()
@@ -139,15 +138,6 @@ void Smtp::readyRead()
 
         state = HandShake;
     }
-    //No need, because I'm using socket->startClienEncryption() which makes the SSL handshake for you
-    /*else if (state == Tls && responseLine == "250")
-    {
-        // Trying AUTH
-        qDebug() << "STarting Tls";
-        *t << "STARTTLS" << "\r\n";
-        t->flush();
-        state = HandShake;
-    }*/
     else if (state == HandShake && responseLine == "250")
     {
         socket->startClientEncryption();
