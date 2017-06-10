@@ -148,6 +148,7 @@ void MainWindow::onReadyRead() {
             QString loginA=loginAcceptRex.cap(1);
 
             if(!user->getUserID().compare(loginA)){
+                 _bgm->stop();
                  ui->teChat->clear();
                  ui->stackedWidget->setCurrentWidget(ui->chatPage);
                  ui->leMessage->setFocus();
