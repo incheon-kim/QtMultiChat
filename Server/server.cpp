@@ -105,7 +105,7 @@ void Server::onReadyRead() {
             QString email=signupRex.cap(3);
             QString gen = signupRex.cap(4);
             QString enable ="1";
-            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"',\'"+enpw+"',"+gen+","+enable+")";
+            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"\'\,\'"+enpw+"\'\,"+gen+"\,"+enable+")";
             qDebug()<<query;
             QString query2="INSERT INTO usrE (ID,Email) VALUES('"+id+"','"+email+"')";
             q.prepare(query);
@@ -239,9 +239,15 @@ void Server::onReadyRead() {
 
                 // send room number info to user
                 sendToAll(QString(number + ":" + QString::number(roomNumber) + "\n")); //send to connected client
+                if(roomPeople == 1){ // 상대방을 기다리고 있습니다 메시지 전송
+                    sendToAll(QString("3:" + QString::number(clients[socket].roomNumber) + ":" + "/system:"+ "" + ":" + "상대방을 기다리고 있습니다.\n"));
 
+                }
                 // 상대방 접속 메세지
-                sendToAll(QString((QString::number(roomPeople))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+clients[socket].userName+":"+"님이 접속했습니다.\n"));
+                    sendToAll(QString((QString::number(roomPeople))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+clients[socket].userName+":"+"님이 접속했습니다.\n"));
+                    if (roomPeople == 2){ // 채팅을 시작합니다. 메시지 전송
+                        sendToAll(QString("3:" + QString::number(clients[socket].roomNumber) + ":" + "/system:"+ "" + ":" + "채팅을 시작합니다.\n"));
+                    }
                 }
 
                 else{ //로그인 승인불가!
