@@ -5,15 +5,16 @@ dlsignin::dlsignin(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::dlsignin)
 {
+    this->socket = new QTcpSocket();
     qDebug()<<"Dialog for Sign up";
     ui->setupUi(this);
-    connect(socket , SIGNAL(connected()), this, SLOT(onConnected()));
-    socket->connectToHost(HOST, PORT);
+    connect(this->socket, SIGNAL(connected()), this, SLOT(onConnected()));
+    this->socket->connectToHost(HOST, PORT);
 }
 
 dlsignin::~dlsignin()
 {
-    socket->close();
+    this->socket->close();
     delete ui;
 }
 
@@ -81,16 +82,12 @@ void dlsignin::on_pbSignupform_clicked()
                                  "이메일을 입력해 주세요.",
                                  QMessageBox::Ok);
         return;}
-    QString token;
     QString tokenCheck=ui->leEmailCode->text().trimmed();
-    for(int i=0; i<makeEmail.size();i++){
-        if(i % 2 == 0 && makeEmail[i] != '@'){
-            token += makeEmail[i];
-        }
-    }
-    qDebug()<<token<<endl;
-    qDebug()<<"token check result : " << (token==tokenCheck);
-    if(token!=tokenCheck){
+
+
+    qDebug()<< userToken <<endl;
+    qDebug()<<"token check result : " << (userToken==tokenCheck);
+    if(userToken!=tokenCheck){
         QMessageBox::information(NULL, "Warning",
                                  "인증번호가 일치하지 않습니다.",
                                  QMessageBox::Ok);
@@ -109,7 +106,7 @@ void dlsignin::on_pbSignupform_clicked()
 
 
 
-    if(socket->write(QString("/makeID:"+makeid+"/makepw:"+enpw+"/makeemail:"+makeEmail+"/makegender:"+ugender+"\n").toUtf8())){
+    if(this->socket->write(QString("/makeID:"+makeid+"/makepw:"+enpw+"/makeemail:"+makeEmail+"/makegender:"+ugender+"\n").toUtf8())){
     qDebug()<<"data send to server";
     QMessageBox::information(NULL, "Info",
                              "회원가입이 완료되었습니다!",
@@ -172,20 +169,16 @@ void dlsignin::on_EmailAuthen_clicked() //email authentication 이메일 인증
 
     }
     // make token value from email
-    QString userToken;
-    for(int i=0; i<userEmail.size();i++){
-        if(i % 2 == 0 && userEmail[i] != '@'){
-            userToken += userEmail[i];
-        }
-    }
+    qsrand(time(NULL));
+    userToken = GetRandomString();
+
     qDebug()<<userToken<<endl;
-    socket->write(QString("/email:"+userEmail+"/Token:"+userToken+"\n" ).toUtf8());
+    this->socket->write(QString("/email:"+ userEmail +"/Token:"+userToken+"\n" ).toUtf8());
 
     qDebug()<<"token send to server";
-    QMessageBox::information(NULL, "Warning",
-                             "인증번호 전송완료!\n 이메일을 확인해 주세요!.",
+    QMessageBox::information(this, "Warning",
+                             "인증번호를 전송 중입니다.",
                              QMessageBox::Ok);
-
 }
 
 void dlsignin::setSocket(QTcpSocket *socket){
@@ -193,11 +186,26 @@ void dlsignin::setSocket(QTcpSocket *socket){
 }
 
 void dlsignin::onConnected(){
-    qDebug()<<"signupform connected!";
+    qDebug()<<"signup form connected!";
 
 }
 
 void dlsignin::onDisconnected(){
-    socket->close();
+    this->socket->close();
     close();
+}
+
+const QString dlsignin::GetRandomString()
+{
+   const QString possibleCharacters("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789");
+   const int randomStringLength = 9; // assuming you want random strings of 12 characters
+
+   QString randomString;
+   for(int i=0; i<randomStringLength; ++i)
+   {
+       int index = qrand() % possibleCharacters.length();
+       QChar nextChar = possibleCharacters.at(index);
+       randomString.append(nextChar);
+   }
+   return randomString;
 }

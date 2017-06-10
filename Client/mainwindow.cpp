@@ -1,11 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <QRegExp>
-#include <QMessageBox>
-#include <QListWidgetItem>
-#include <QTcpSocket>
-#include "simplecrypt.h"
-#include <QString>
+
 
 
 MainWindow::MainWindow(QWidget *parent) :QMainWindow(parent), ui(new Ui::MainWindow)

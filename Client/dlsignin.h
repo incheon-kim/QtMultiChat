@@ -23,17 +23,17 @@ class dlsignin : public QDialog
 public:
     explicit dlsignin(QWidget *parent = 0);
     void setSocket(QTcpSocket* socket);
+    const QString GetRandomString();
     ~dlsignin();
-
 private slots:
     void on_pbSignupform_clicked();
     void onConnected();
     void onDisconnected();
     void on_EmailAuthen_clicked();
-
 private:
     Ui::dlsignin *ui;
-     QTcpSocket* socket;
+    QTcpSocket* socket;
+    QString userToken;
 };
 
 #endif // DLSIGNIN_H

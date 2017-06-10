@@ -105,7 +105,7 @@ void Server::onReadyRead() {
             QString email=signupRex.cap(3);
             QString gen = signupRex.cap(4);
             QString enable ="1";
-            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"',\'"+enpw+","+gen+","+enable+")";
+            QString query="INSERT INTO usrInfo (ID,PW,Gender,Enable) VALUES(\'"+id+"',\'"+enpw+"',"+gen+","+enable+")";
             qDebug()<<query;
             QString query2="INSERT INTO usrE (ID,Email) VALUES('"+id+"','"+email+"')";
             q.prepare(query);
@@ -281,16 +281,18 @@ void Server::sendMail(QString Token, QString Destination){
     // title of email
     QString Title = "동동주 인증메일 입니다.";
     // body of email
-    QString body = "안녕하세요, 동동주 입니다.\n인증번호는 : ";
-    body = body + Token + " 입니다. 감사합니다.";
+    QString body = "안녕하세요, 동동주 입니다.\n인증번호는 :  ";
+    body = body + Token + "   입니다. 감사합니다.";
 
     // address, passwrod, hostname, port(gmail uses 465 for TLS)
     Smtp* smtp = new Smtp(admin.toUtf8(),pwd.toUtf8(),host.toUtf8(),465);
     connect(smtp, SIGNAL(status(QString)), this, SLOT(mailSent(QString)));
     smtp->sendMail(admin, Destination, Title.toUtf8(), body.toUtf8());
+    sendToAll(QString(Token+"\n"));
 }
 
 void Server::mailSent(QString status){
-    if(status == "Message sent")
+    if(status == "Message sent"){
         qDebug() <<"Email Successfully sent.";
+    }
 }

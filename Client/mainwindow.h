@@ -3,9 +3,17 @@
 
 #include <QMainWindow>
 #include <QTcpSocket>
+#include <QString>
+
+#include <QRegExp>
 #include <QRegExpValidator>
+
+#include <QMessageBox>
+#include <QListWidgetItem>
 #include <QMediaPlayer>
 #include <QMediaPlaylist>
+
+#include "simplecrypt.h"
 #include "dlsignin.h"
 #include "user.h"
 
