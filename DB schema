@@ -1,4 +1,4 @@
-//DB name: dongdongju
+//DB name: db
 
 CREATE TABLE usrInfo(
 ID TEXT NOT NULL PRIMARY KEY,
