@@ -10,9 +10,8 @@ Ubuntu 16.04 LTS , Qt5.8 환경에서 빌드하고 테스트 했습니다.
 을 설치하고 그 환경에서 빌드하는 것을 권장합니다.
 
 
-https://github.com/kolya-t/Chat 에서 포크된 프로젝트입니다
-
-Thanks to [Nikolay Toporkov](https://github.com/kolya-t)
+https://github.com/kolya-t/Chat 에서 포크된 프로젝트 입니다. 
+// Thanks to [Nikolay Toporkov](https://github.com/kolya-t)
 
 SMTP통신을 위한 라이브러리는 [SimpleSmtp_SSL_QT5](https://github.com/xcoder123/SimpleSmtp_SSL_QT5) 를 사용했습니다.
 
