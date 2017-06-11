@@ -138,10 +138,7 @@ void Server::onReadyRead() {
                     int dc=q.record().indexOf("PW");
                     QString dcp = q.value(dc).toString();
                     enpw=crypto.decryptToString(dcp);
-                    if(enpw!=userPW){
-                        qDebug()<<"login fail";
-                        socket->disconnectFromHost();
-                    }
+                    if(enpw==userPW){
                     qDebug()<<"Login Query 1 completed"<<endl;
                     q.exec(query2);
                     if(q.next()) {
@@ -153,110 +150,119 @@ void Server::onReadyRead() {
                         temp.userName=userID;
                         temp.userSex=gender_temp;
                         clients.insert(socket,temp);
-                    }
-                qDebug() << userID << "logged in.";
+                        qDebug() << userID << "logged in.";
 
-                sendToAll(QString("/LoginSuccess:"+userID+"\n"));
-                QString number;
-                int roomNumber=1;
-                int roomPeople=0;
-                bool enter=false;
-
+                        sendToAll(QString("/LoginSuccess:"+userID+"\n"));
+                        QString number;
+                        int roomNumber=1;
+                        int roomPeople=0;
+                        bool enter=false;
 
 
-                QVector<Room>::iterator iter;
 
-                   if(!manager->isEmpty())
-                   {       
+                        QVector<Room>::iterator iter;
 
-                       for(iter=manager->beginIterator();iter!=manager->endItertor();++iter)
-                       {
-                           if((*iter).getPeople()<2)
+                           if(!manager->isEmpty())
                            {
-                               qDebug()<<"userGender"<<clients[socket].userSex;
-                               if(clients[socket].userSex==0 && (*iter).needMale())
-                               {
-                                   (*iter).enter();
-                                   (*iter).enterMale();
-                                   number="number";
-                                   enter = true;
-                                   qDebug()<<"Enter Male";
-                                   qDebug()<<"roomPeople"<<(*iter).getPeople();
-                                   roomPeople = (*iter).getPeople();
-                                   qDebug()<<"roomNumber"<<roomNumber;
-                                   break;
 
-                               }
-                               else if(clients[socket].userSex==1&&(*iter).needFemale())
+                               for(iter=manager->beginIterator();iter!=manager->endItertor();++iter)
                                {
+                                   if((*iter).getPeople()<2)
+                                   {
+                                       qDebug()<<"userGender"<<clients[socket].userSex;
+                                       if(clients[socket].userSex==0 && (*iter).needMale())
+                                       {
+                                           (*iter).enter();
+                                           (*iter).enterMale();
+                                           number="number";
+                                           enter = true;
+                                           qDebug()<<"Enter Male";
+                                           qDebug()<<"roomPeople"<<(*iter).getPeople();
+                                           roomPeople = (*iter).getPeople();
+                                           qDebug()<<"roomNumber"<<roomNumber;
+                                           break;
 
-                                   (*iter).enter();
-                                   (*iter).enterFemale();
-                                   number="number";
-                                   enter = true;
-                                   qDebug()<<"Enter Female";
-                                   qDebug()<<"roomPeople"<<(*iter).getPeople();
-                                   roomPeople = (*iter).getPeople();
-                                   qDebug()<<"roomNumber"<<roomNumber;
-                                   break;                               
+                                       }
+                                       else if(clients[socket].userSex==1&&(*iter).needFemale())
+                                       {
+
+                                           (*iter).enter();
+                                           (*iter).enterFemale();
+                                           number="number";
+                                           enter = true;
+                                           qDebug()<<"Enter Female";
+                                           qDebug()<<"roomPeople"<<(*iter).getPeople();
+                                           roomPeople = (*iter).getPeople();
+                                           qDebug()<<"roomNumber"<<roomNumber;
+                                           break;
+                                       }
+                                   }
+                                   roomNumber++;
                                }
                            }
-                           roomNumber++;
-                       }
-                   }
 
-                   if(enter==false)
-                   {
+                           if(enter==false)
+                           {
 
-                       qDebug()<<"userGender"<<clients[socket].userSex;
-                       manager->createRoom();
-                       QVector<Room>::iterator getRoom= manager->lastIter();
-                       if(clients[socket].userSex==0)
-                       {
-                           (*getRoom).enter();
-                           (*getRoom).enterMale();
-                           qDebug()<<"Enter Male";
-                           qDebug()<<"roomPeople"<<(*getRoom).getPeople();
-                           roomPeople = (*getRoom).getPeople();
-                           qDebug()<<"enter Room"<<roomNumber;
+                               qDebug()<<"userGender"<<clients[socket].userSex;
+                               manager->createRoom();
+                               QVector<Room>::iterator getRoom= manager->lastIter();
+                               if(clients[socket].userSex==0)
+                               {
+                                   (*getRoom).enter();
+                                   (*getRoom).enterMale();
+                                   qDebug()<<"Enter Male";
+                                   qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+                                   roomPeople = (*getRoom).getPeople();
+                                   qDebug()<<"enter Room"<<roomNumber;
 
-                       }
-                       else{
+                               }
+                               else{
 
-                           (*getRoom).enter();
-                           (*getRoom).enterFemale();
-                           qDebug()<<"Enter Female";
-                           qDebug()<<"roomPeople"<<(*getRoom).getPeople();
-                           roomPeople = (*getRoom).getPeople();
-                           qDebug()<<"enter Room"<<roomNumber;
+                                   (*getRoom).enter();
+                                   (*getRoom).enterFemale();
+                                   qDebug()<<"Enter Female";
+                                   qDebug()<<"roomPeople"<<(*getRoom).getPeople();
+                                   roomPeople = (*getRoom).getPeople();
+                                   qDebug()<<"enter Room"<<roomNumber;
 
-                       }
-                    }
-                userInfo info;
-                info=clients[socket];
-                info.roomNumber=roomNumber;
-                clients.insert(socket,info);
+                               }
+                            }
+                        userInfo info;
+                        info=clients[socket];
+                        info.roomNumber=roomNumber;
+                        clients.insert(socket,info);
 
-                // send room number info to user
-                sendToAll(QString(number + ":" + QString::number(roomNumber) + "\n")); //send to connected client
-                if(roomPeople == 1){ // 상대방을 기다리고 있습니다 메시지 전송
-                    sendToAll(QString("3:" + QString::number(clients[socket].roomNumber) + ":" + "/system:"+ "" + ":" + "상대방을 기다리고 있습니다.\n"));
+                        // send room number info to user
+                        sendToAll(QString(number + ":" + QString::number(roomNumber) + "\n")); //send to connected client
+                        if(roomPeople == 1){ // 상대방을 기다리고 있습니다 메시지 전송
+                            sendToAll(QString("3:" + QString::number(clients[socket].roomNumber) + ":" + "/system:"+ "" + ":" + "상대방을 기다리고 있습니다.\n"));
 
+                        }
+                        // 상대방 접속 메세지
+                            sendToAll(QString((QString::number(roomPeople))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+clients[socket].userName+":"+"님이 접속했습니다.\n"));
+                            if (roomPeople == 2){ // 채팅을 시작합니다. 메시지 전송
+                                sendToAll(QString("3:" + QString::number(clients[socket].roomNumber) + ":" + "/system:"+ "" + ":" + "채팅을 시작합니다.\n"));
+                            }
+                        }
                 }
-                // 상대방 접속 메세지
-                    sendToAll(QString((QString::number(roomPeople))+":"+QString::number(clients[socket].roomNumber)+":"+"/system:"+clients[socket].userName+":"+"님이 접속했습니다.\n"));
-                    if (roomPeople == 2){ // 채팅을 시작합니다. 메시지 전송
-                        sendToAll(QString("3:" + QString::number(clients[socket].roomNumber) + ":" + "/system:"+ "" + ":" + "채팅을 시작합니다.\n"));
+
                     }
-                }
+
 
                 else{ //로그인 승인불가!
                     qDebug()<<"login fail";
                     socket->disconnectFromHost();
                 }
             }
-        }
 
+
+
+            else{
+                qDebug()<<"login fail";
+                socket->disconnectFromHost();
+            }
+}
         else if (messageRex.indexIn(line) != -1) {
             QString roomNum = messageRex.cap(1);
             QString userName = messageRex.cap(2);
