@@ -1,17 +1,17 @@
 # QtMultiChat
 
-Go back to [Korean 한글 Readme](https://github.com/m3nukim/QtMultiChat/blob/master/README.md)
+Go back to [Korean 한글 설명서](https://github.com/m3nukim/QtMultiChat/blob/master/README.md)
 
-Randomly matched chatting program for users have [Dongguk Univ. E-mail](https://mail.dongguk.edu) account.
+Randomly matched chatting program for user who has [Dongguk Univ. E-mail](https://mail.dongguk.edu) account.
 
 Built & tested on Ubuntu 16.04 LTS and Qt 5.8.0 .
 
-We recommend you build with [Qt Creator & Qt 5.8.0](http://download.qt.io/official_releases/qt/5.8/5.8.0/qt-opensource-linux-x64-5.8.0.run)
+We recommend you to build with [Qt Creator & Qt 5.8.0](http://download.qt.io/official_releases/qt/5.8/5.8.0/qt-opensource-linux-x64-5.8.0.run)
 
 
 Forked from https://github.com/kolya-t/Chat [ Thanks to [Nikolay Toporkov](https://github.com/kolya-t) ]
 
-SMTP lib from https://github.com/xcoder123/SimpleSmtp_SSL_QT5
+SMTP library from https://github.com/xcoder123/SimpleSmtp_SSL_QT5
 
 Encyrption library from [SimpleCrypt](https://wiki.qt.io/Simple_encryption_with_SimpleCrypt)
 
@@ -39,34 +39,34 @@ then, go to cloned directory
 
 ## 4. Build
 
-Client and Server have exactly same procedure.
+Client and Server have the exact same procedure.
 
 ### Client
 
-Go to Client directory from "QtMultiChat" directory
+Go to "Client" directory from "QtMultiChat" directory
 
 <pre><code>cd Client</pre></code>
 
-Create makefile and build
+Create makefile then build
 
 <pre><code>qmake
 make</pre></code>
 
-then execute!
+finally execute!
 
 <pre><code>./Client</pre></code>
 
 ### Server
 
-Go to Server directory from "QtMultiChat" directory
+Go to "Server" directory from "QtMultiChat" directory
 
 <pre><code>cd Server</pre></code>
 
-Create makefile and build
+Create makefile then build
 
 <pre><code>qmake
 make</pre></code>
 
-then execute!
+finally execute!
 
 <pre><code>./Server</pre></code>
