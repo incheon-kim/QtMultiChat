@@ -15,6 +15,8 @@ https://github.com/kolya-t/Chat 에서 포크된 프로젝트 입니다.
 
 SMTP통신을 위한 라이브러리는 [SimpleSmtp_SSL_QT5](https://github.com/xcoder123/SimpleSmtp_SSL_QT5) 를 사용했습니다.
 
+암호화를 위한 라이브러리는 [SimpleCrypt](https://wiki.qt.io/Simple_encryption_with_SimpleCrypt)를 사용했습니다.
+
 # 빌드하기
 
 모든 과정은 터미널에서 진행됩니다.
