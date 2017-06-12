@@ -13,7 +13,7 @@ Forked from https://github.com/kolya-t/Chat [ Thanks to [Nikolay Toporkov](https
 
 SMTP lib from https://github.com/xcoder123/SimpleSmtp_SSL_QT5
 
-
+Encyrption library from [SimpleCrypt](https://wiki.qt.io/Simple_encryption_with_SimpleCrypt)
 
 # Build yourself
 
