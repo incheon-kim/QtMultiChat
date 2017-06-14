@@ -287,7 +287,7 @@ void Server::sendMail(QString Token, QString Destination){
     // full address of account
     QString admin = "masterofddj@gmail.com";
     // passwd of account
-    QString pwd = "qwerty1995";
+    QString pwd = "";
     // hostname of gmail server
     QString host = "smtp.gmail.com";
     // title of email
